@@ -1,0 +1,622 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD11A2F4723710022AA9D /* LinkUpApp.swift */; };
+		080FD11D2F4723710022AA9D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD11C2F4723710022AA9D /* ContentView.swift */; };
+		080FD11F2F4723730022AA9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 080FD11E2F4723730022AA9D /* Assets.xcassets */; };
+		080FD1232F4723730022AA9D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 080FD1222F4723730022AA9D /* Preview Assets.xcassets */; };
+		080FD12D2F4723730022AA9D /* LinkUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD12C2F4723730022AA9D /* LinkUpTests.swift */; };
+		080FD1372F4723740022AA9D /* LinkUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1362F4723740022AA9D /* LinkUpUITests.swift */; };
+		080FD1392F4723740022AA9D /* LinkUpUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		080FD1292F4723730022AA9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080FD10F2F4723710022AA9D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 080FD1162F4723710022AA9D;
+			remoteInfo = LinkUp;
+		};
+		080FD1332F4723740022AA9D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 080FD10F2F4723710022AA9D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 080FD1162F4723710022AA9D;
+			remoteInfo = LinkUp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		080FD1172F4723710022AA9D /* LinkUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinkUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		080FD11A2F4723710022AA9D /* LinkUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpApp.swift; sourceTree = "<group>"; };
+		080FD11C2F4723710022AA9D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		080FD11E2F4723730022AA9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		080FD1202F4723730022AA9D /* LinkUp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LinkUp.entitlements; sourceTree = "<group>"; };
+		080FD1222F4723730022AA9D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		080FD1282F4723730022AA9D /* LinkUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LinkUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		080FD12C2F4723730022AA9D /* LinkUpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpTests.swift; sourceTree = "<group>"; };
+		080FD1322F4723740022AA9D /* LinkUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LinkUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		080FD1362F4723740022AA9D /* LinkUpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITests.swift; sourceTree = "<group>"; };
+		080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		080FD1142F4723710022AA9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD1252F4723730022AA9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD12F2F4723740022AA9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080FD10E2F4723710022AA9D = {
+			isa = PBXGroup;
+			children = (
+				080FD1192F4723710022AA9D /* LinkUp */,
+				080FD12B2F4723730022AA9D /* LinkUpTests */,
+				080FD1352F4723740022AA9D /* LinkUpUITests */,
+				080FD1182F4723710022AA9D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		080FD1182F4723710022AA9D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				080FD1172F4723710022AA9D /* LinkUp.app */,
+				080FD1282F4723730022AA9D /* LinkUpTests.xctest */,
+				080FD1322F4723740022AA9D /* LinkUpUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		080FD1192F4723710022AA9D /* LinkUp */ = {
+			isa = PBXGroup;
+			children = (
+				080FD11A2F4723710022AA9D /* LinkUpApp.swift */,
+				080FD11C2F4723710022AA9D /* ContentView.swift */,
+				080FD11E2F4723730022AA9D /* Assets.xcassets */,
+				080FD1202F4723730022AA9D /* LinkUp.entitlements */,
+				080FD1212F4723730022AA9D /* Preview Content */,
+			);
+			path = LinkUp;
+			sourceTree = "<group>";
+		};
+		080FD1212F4723730022AA9D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				080FD1222F4723730022AA9D /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		080FD12B2F4723730022AA9D /* LinkUpTests */ = {
+			isa = PBXGroup;
+			children = (
+				080FD12C2F4723730022AA9D /* LinkUpTests.swift */,
+			);
+			path = LinkUpTests;
+			sourceTree = "<group>";
+		};
+		080FD1352F4723740022AA9D /* LinkUpUITests */ = {
+			isa = PBXGroup;
+			children = (
+				080FD1362F4723740022AA9D /* LinkUpUITests.swift */,
+				080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */,
+			);
+			path = LinkUpUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		080FD1162F4723710022AA9D /* LinkUp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 080FD13C2F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUp" */;
+			buildPhases = (
+				080FD1132F4723710022AA9D /* Sources */,
+				080FD1142F4723710022AA9D /* Frameworks */,
+				080FD1152F4723710022AA9D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LinkUp;
+			productName = LinkUp;
+			productReference = 080FD1172F4723710022AA9D /* LinkUp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		080FD1272F4723730022AA9D /* LinkUpTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 080FD13F2F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUpTests" */;
+			buildPhases = (
+				080FD1242F4723730022AA9D /* Sources */,
+				080FD1252F4723730022AA9D /* Frameworks */,
+				080FD1262F4723730022AA9D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				080FD12A2F4723730022AA9D /* PBXTargetDependency */,
+			);
+			name = LinkUpTests;
+			productName = LinkUpTests;
+			productReference = 080FD1282F4723730022AA9D /* LinkUpTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		080FD1312F4723740022AA9D /* LinkUpUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 080FD1422F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUpUITests" */;
+			buildPhases = (
+				080FD12E2F4723740022AA9D /* Sources */,
+				080FD12F2F4723740022AA9D /* Frameworks */,
+				080FD1302F4723740022AA9D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				080FD1342F4723740022AA9D /* PBXTargetDependency */,
+			);
+			name = LinkUpUITests;
+			productName = LinkUpUITests;
+			productReference = 080FD1322F4723740022AA9D /* LinkUpUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		080FD10F2F4723710022AA9D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					080FD1162F4723710022AA9D = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					080FD1272F4723730022AA9D = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 080FD1162F4723710022AA9D;
+					};
+					080FD1312F4723740022AA9D = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 080FD1162F4723710022AA9D;
+					};
+				};
+			};
+			buildConfigurationList = 080FD1122F4723710022AA9D /* Build configuration list for PBXProject "LinkUp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 080FD10E2F4723710022AA9D;
+			productRefGroup = 080FD1182F4723710022AA9D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				080FD1162F4723710022AA9D /* LinkUp */,
+				080FD1272F4723730022AA9D /* LinkUpTests */,
+				080FD1312F4723740022AA9D /* LinkUpUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		080FD1152F4723710022AA9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				080FD1232F4723730022AA9D /* Preview Assets.xcassets in Resources */,
+				080FD11F2F4723730022AA9D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD1262F4723730022AA9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD1302F4723740022AA9D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		080FD1132F4723710022AA9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,
+				080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD1242F4723730022AA9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				080FD12D2F4723730022AA9D /* LinkUpTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		080FD12E2F4723740022AA9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				080FD1372F4723740022AA9D /* LinkUpUITests.swift in Sources */,
+				080FD1392F4723740022AA9D /* LinkUpUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		080FD12A2F4723730022AA9D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 080FD1162F4723710022AA9D /* LinkUp */;
+			targetProxy = 080FD1292F4723730022AA9D /* PBXContainerItemProxy */;
+		};
+		080FD1342F4723740022AA9D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 080FD1162F4723710022AA9D /* LinkUp */;
+			targetProxy = 080FD1332F4723740022AA9D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		080FD13A2F4723740022AA9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		080FD13B2F4723740022AA9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		080FD13D2F4723740022AA9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LinkUp/LinkUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LinkUp/Preview Content\"";
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		080FD13E2F4723740022AA9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LinkUp/LinkUp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"LinkUp/Preview Content\"";
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphoneos*]" = YES;
+				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
+				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
+				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		080FD1402F4723740022AA9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUpTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LinkUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LinkUp";
+			};
+			name = Debug;
+		};
+		080FD1412F4723740022AA9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUpTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LinkUp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LinkUp";
+			};
+			name = Release;
+		};
+		080FD1432F4723740022AA9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUpUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LinkUp;
+			};
+			name = Debug;
+		};
+		080FD1442F4723740022AA9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = KTApps.LinkUpUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = LinkUp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		080FD1122F4723710022AA9D /* Build configuration list for PBXProject "LinkUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				080FD13A2F4723740022AA9D /* Debug */,
+				080FD13B2F4723740022AA9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		080FD13C2F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				080FD13D2F4723740022AA9D /* Debug */,
+				080FD13E2F4723740022AA9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		080FD13F2F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUpTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				080FD1402F4723740022AA9D /* Debug */,
+				080FD1412F4723740022AA9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		080FD1422F4723740022AA9D /* Build configuration list for PBXNativeTarget "LinkUpUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				080FD1432F4723740022AA9D /* Debug */,
+				080FD1442F4723740022AA9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 080FD10F2F4723710022AA9D /* Project object */;
+}
