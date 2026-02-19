@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Xcode user state (per-user, should never be committed)
+*.xcuserstate
+
+# Node.js dependencies (e.g. if using Firebase functions)
+functions/node_modules/
