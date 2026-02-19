@@ -1,0 +1,9 @@
+---
+description: Project context and versions the AI must remember
+alwaysApply: true
+---
+
+# LinkUp project context
+
+- **Xcode version**: 15.4 — assume this when suggesting Xcode features, build settings, or simulator/OS compatibility unless the user says otherwise.
+- **Firebase SDK version**: 10.22.1 — use this version when adding, updating, or referring to Firebase dependencies (e.g. in Swift Package Manager or Podfile). Do not suggest or use a different Firebase SDK version unless the user explicitly asks to change it.
