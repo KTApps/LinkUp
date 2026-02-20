@@ -14,6 +14,8 @@
 		080FD12D2F4723730022AA9D /* LinkUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD12C2F4723730022AA9D /* LinkUpTests.swift */; };
 		080FD1372F4723740022AA9D /* LinkUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1362F4723740022AA9D /* LinkUpUITests.swift */; };
 		080FD1392F4723740022AA9D /* LinkUpUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */; };
+		086A745C2F472900007E69CC /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745E2F472900007E69CC /* AuthModel.swift */; };
+		086A745D2F472900007E69CC /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745F2F472900007E69CC /* AuthState.swift */; };
 		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
 		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
 		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
@@ -53,6 +55,8 @@
 		080FD1362F4723740022AA9D /* LinkUpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITests.swift; sourceTree = "<group>"; };
 		080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		086A745A2F472889007E69CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		086A745E2F472900007E69CC /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
+		086A745F2F472900007E69CC /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,7 @@
 		080FD1192F4723710022AA9D /* LinkUp */ = {
 			isa = PBXGroup;
 			children = (
+				086A745B2F472900007E69CC /* Authentication */,
 				086A745A2F472889007E69CC /* GoogleService-Info.plist */,
 				080FD11A2F4723710022AA9D /* LinkUpApp.swift */,
 				080FD11C2F4723710022AA9D /* ContentView.swift */,
@@ -117,6 +122,15 @@
 				080FD1212F4723730022AA9D /* Preview Content */,
 			);
 			path = LinkUp;
+			sourceTree = "<group>";
+		};
+		086A745B2F472900007E69CC /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				086A745E2F472900007E69CC /* AuthModel.swift */,
+				086A745F2F472900007E69CC /* AuthState.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		080FD1212F4723730022AA9D /* Preview Content */ = {
@@ -286,6 +300,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				086A745C2F472900007E69CC /* AuthModel.swift in Sources */,
+				086A745D2F472900007E69CC /* AuthState.swift in Sources */,
 				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,
 				080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */,
 			);
