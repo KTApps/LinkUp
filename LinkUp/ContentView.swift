@@ -7,8 +7,9 @@
 
 import SwiftUI
 
+/// Main app view when the user is logged in.
 struct ContentView: View {
-    @StateObject private var authState = AuthState()
+    @ObservedObject var authState: AuthState
 
     var body: some View {
         VStack {
@@ -22,5 +23,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(authState: AuthState())
 }
