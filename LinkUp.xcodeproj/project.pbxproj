@@ -14,6 +14,7 @@
 		080FD12D2F4723730022AA9D /* LinkUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD12C2F4723730022AA9D /* LinkUpTests.swift */; };
 		080FD1372F4723740022AA9D /* LinkUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1362F4723740022AA9D /* LinkUpUITests.swift */; };
 		080FD1392F4723740022AA9D /* LinkUpUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */; };
+		086A74702F472900007E69CC /* AuthTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74712F472900007E69CC /* AuthTheme.swift */; };
 		086A745C2F472900007E69CC /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745E2F472900007E69CC /* AuthModel.swift */; };
 		086A745D2F472900007E69CC /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745F2F472900007E69CC /* AuthState.swift */; };
 		086A74602F472900007E69CC /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74612F472900007E69CC /* AuthViewModel.swift */; };
@@ -62,6 +63,7 @@
 		080FD1362F4723740022AA9D /* LinkUpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITests.swift; sourceTree = "<group>"; };
 		080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		086A745A2F472889007E69CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		086A74712F472900007E69CC /* AuthTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTheme.swift; sourceTree = "<group>"; };
 		086A745E2F472900007E69CC /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		086A745F2F472900007E69CC /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		086A74612F472900007E69CC /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
@@ -145,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				086A74612F472900007E69CC /* AuthViewModel.swift */,
+				086A74712F472900007E69CC /* AuthTheme.swift */,
 				086A745E2F472900007E69CC /* AuthModel.swift */,
 				086A745F2F472900007E69CC /* AuthState.swift */,
 				086A74672F472900007E69CC /* Input.swift */,
@@ -323,6 +326,7 @@
 			files = (
 				086A746A2F472900007E69CC /* GeometryReader.swift in Sources */,
 				086A746C2F472900007E69CC /* Typography.swift in Sources */,
+				086A74702F472900007E69CC /* AuthTheme.swift in Sources */,
 				086A745C2F472900007E69CC /* AuthModel.swift in Sources */,
 				086A745D2F472900007E69CC /* AuthState.swift in Sources */,
 				086A74602F472900007E69CC /* AuthViewModel.swift in Sources */,

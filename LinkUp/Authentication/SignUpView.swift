@@ -23,6 +23,7 @@ struct SignUpView: View {
                     VStack(spacing: geometry.size.height * 0.03) {
                         Text("LinkUp")
                             .font(Typography.title)
+                            .foregroundStyle(AuthTheme.primary)
 
                         VStack(spacing: geometry.size.height * 0.02) {
                             Input(text: $username, title: "Username", placeholder: "Choose a username")
@@ -45,14 +46,17 @@ struct SignUpView: View {
                             } label: {
                                 Text("SIGN UP")
                                     .font(Typography.headline)
+                                    .foregroundStyle(AuthTheme.background)
                                     .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 12)
+                                    .padding(.vertical, 14)
                             }
-                            .buttonStyle(.borderedProminent)
+                            .background(AuthTheme.accent)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                         }
                         .padding(.horizontal)
                     }
                 }
+                .scrollContentBackground(.hidden)
 
                 Button {
                     dismiss()
@@ -60,13 +64,17 @@ struct SignUpView: View {
                     HStack(spacing: 4) {
                         Text("Already have an account?")
                             .font(Typography.subheadline)
+                            .foregroundStyle(AuthTheme.secondary)
                         Text("LOG IN")
                             .font(Typography.subheadlineSemibold)
+                            .foregroundStyle(AuthTheme.accent)
                     }
                 }
             }
             .padding(.horizontal, geometry.size.width * 0.05)
             .padding(.vertical, geometry.size.height * 0.05)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AuthTheme.background)
             .keyboardResponsive()
         }
         .alert("Sign up failed", isPresented: $authState.signUpError) {

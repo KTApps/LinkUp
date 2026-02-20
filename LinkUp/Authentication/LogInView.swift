@@ -23,6 +23,7 @@ struct LogInView: View {
                         VStack(spacing: geometry.size.height * 0.03) {
                             Text("LinkUp")
                                 .font(Typography.title)
+                                .foregroundStyle(AuthTheme.primary)
 
                             VStack(spacing: geometry.size.height * 0.02) {
                                 Input(text: $email, title: "Email", placeholder: "name@example.com")
@@ -38,9 +39,9 @@ struct LogInView: View {
                                     } label: {
                                         Image(systemName: showPassword ? "eye.slash" : "eye")
                                             .font(Typography.subheadline)
-                                            .foregroundStyle(.secondary)
+                                            .foregroundStyle(AuthTheme.secondary)
                                     }
-                                    .padding(.top, geometry.size.height * 0.045)
+                                    .padding(.top, geometry.size.height * 0.052)
                                     .padding(.trailing, geometry.size.width * 0.03)
                                 }
 
@@ -51,14 +52,17 @@ struct LogInView: View {
                                 } label: {
                                     Text("LOG IN")
                                         .font(Typography.headline)
+                                        .foregroundStyle(AuthTheme.background)
                                         .frame(maxWidth: .infinity)
-                                        .padding(.vertical, 12)
+                                        .padding(.vertical, 14)
                                 }
-                                .buttonStyle(.borderedProminent)
+                                .background(AuthTheme.accent)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                             .padding(.horizontal)
                         }
                     }
+                    .scrollContentBackground(.hidden)
 
                     NavigationLink {
                         SignUpView(authState: authState)
@@ -66,15 +70,22 @@ struct LogInView: View {
                         HStack(spacing: 4) {
                             Text("Don't have an account?")
                                 .font(Typography.subheadline)
+                                .foregroundStyle(AuthTheme.secondary)
                             Text("SIGN UP")
                                 .font(Typography.subheadlineSemibold)
+                                .foregroundStyle(AuthTheme.accent)
                         }
                     }
                 }
                 .padding(.horizontal, geometry.size.width * 0.05)
                 .padding(.vertical, geometry.size.height * 0.05)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(AuthTheme.background)
                 .keyboardResponsive()
             }
+            .scrollContentBackground(.hidden)
+            .toolbarBackground(AuthTheme.background, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .alert("Log in failed", isPresented: $authState.logInError) {
                 Button("Try again") {
                     authState.logInError = false

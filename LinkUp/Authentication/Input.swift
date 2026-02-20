@@ -18,21 +18,33 @@ struct Input: View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
                 .font(Typography.subheadlineMedium)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(AuthTheme.secondary)
 
             if secureField {
                 SecureField(placeholder, text: $text)
                     .textFieldStyle(.plain)
-                    .padding(10)
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .foregroundStyle(AuthTheme.primary)
+                    .tint(AuthTheme.accent)
+                    .padding(14)
+                    .background(AuthTheme.background)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(AuthTheme.primary.opacity(0.25), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .autocapitalization(.none)
             } else {
                 TextField(placeholder, text: $text)
                     .textFieldStyle(.plain)
-                    .padding(10)
-                    .background(Color(.systemGray6))
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                    .foregroundStyle(AuthTheme.primary)
+                    .tint(AuthTheme.accent)
+                    .padding(14)
+                    .background(AuthTheme.background)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .strokeBorder(AuthTheme.primary.opacity(0.25), lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .autocapitalization(.none)
             }
         }
@@ -45,4 +57,5 @@ struct Input: View {
         Input(text: .constant(""), title: "Password", placeholder: "••••••••", secureField: true)
     }
     .padding()
+    .background(AuthTheme.background)
 }
