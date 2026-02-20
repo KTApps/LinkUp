@@ -1,5 +1,5 @@
 ---
-name: Main app TabView 3 tabs
+name: Main tabs
 overview: Replace the placeholder ContentView with a TabView that has three tabs—Messages, Plus, and Calendar—using AuthTheme and placeholder content per tab.
 todos: []
 isProject: false
@@ -52,11 +52,11 @@ After this change, `ContentView` becomes the **main app shell**: a `TabView` wit
 - **Option A (minimal):** Define three small placeholder views inline in ContentView (e.g. a `Text("Messages")`, `Text("Plus")`, `Text("Calendar")` each with `AuthTheme.background` and `AuthTheme.primary`), so everything stays in one file.
 - **Option B (cleaner):** Add three view files under a `Main` or `Tabs` folder (e.g. `MessagesTabView.swift`, `PlusTabView.swift`, `CalendarTabView.swift`), each taking `authState` and showing a simple centered label and background; ContentView then composes the TabView from these three views.
 
-Recommendation: **Option A** for this plan so the scope is “one file change + theme”; tab content can be split into separate views when you build out each screen.
+Recommendation: **Option A** for this plan so the scope is "one file change + theme"; tab content can be split into separate views when you build out each screen.
 
 ### 4. Responsive / keyboard
 
-- No `GeometryReader` or `ScrollView` required for the shell itself; tab content is placeholders. When you later add real Messages/Plus/Calendar screens, apply the responsive design pattern from [.cursor/plans/linkup_responsive_design_3dc508ce.plan.md](.cursor/plans/linkup_responsive_design_3dc508ce.plan.md) to those views.
+- No `GeometryReader` or `ScrollView` required for the shell itself; tab content is placeholders. When you later add real Messages/Plus/Calendar screens, apply the responsive design pattern from [.cursor/plans/responsive-design.plan.md](.cursor/plans/responsive-design.plan.md) to those views.
 - No `.keyboardResponsive()` on the TabView unless a tab contains text fields; add it later per tab if needed.
 
 ## Files to touch
@@ -75,4 +75,3 @@ No new files required if using Option A. No changes to [StartView.swift](LinkUp/
 - Selecting a tab shows the corresponding placeholder content.
 - Tab bar and content use AuthTheme (black, white, cyan accent); no system grey or mockup colors.
 - App compiles and runs; no regressions to auth flow.
-

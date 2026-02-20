@@ -1,5 +1,5 @@
 ---
-name: LinkUp responsive design
+name: Responsive design
 overview: "Reusable pattern for making any screen in LinkUp responsive: GeometryReader at root, proportional padding/spacing, ScrollView for overflow, and .keyboardResponsive() on screens with text fields."
 todos:
   - id: prerequisite-keyboard
@@ -19,7 +19,7 @@ isProject: false
 
 # Responsive design pattern for any screen (LinkUp)
 
-Use this pattern on **any** screen—auth, settings, profile, feeds, etc.—so layout scales across device sizes and the keyboard doesn’t cover focused fields.
+Use this pattern on **any** screen—auth, settings, profile, feeds, etc.—so layout scales across device sizes and the keyboard doesn't cover focused fields.
 
 **Core idea:** **GeometryReader** at the root, **proportional** padding and spacing (e.g. % of width/height), **ScrollView** where content can overflow, and **.keyboardResponsive()** on screens that have text fields.
 
@@ -57,13 +57,13 @@ Before applying the pattern to a screen, the project should have:
   - Extension: `func keyboardResponsive() -> some View { self.modifier(KeyboardResponsiveModifier()) }`.
 2. **(Optional)** A shared **Typography** or spacing constants if you want consistent font/sizing across screens.
 
-If these don’t exist, add them first; then use the procedure below on any screen.
+If these don't exist, add them first; then use the procedure below on any screen.
 
 ---
 
 ## How to make a screen responsive
 
-Apply these steps to **whatever view/screen** you’re working on (e.g. LogInView, SignUpView, SettingsView, ProfileView, ContentView, etc.).
+Apply these steps to **whatever view/screen** you're working on (e.g. LogInView, SignUpView, SettingsView, ProfileView, ContentView, etc.).
 
 ### 1. Wrap the screen body in GeometryReader
 
@@ -94,14 +94,14 @@ Replace fixed values (e.g. 37, 12, 24) with expressions like `geometry.size.heig
 ### 3. Use ScrollView where content can overflow
 
 - Wrap the **scrollable** part (title, form, list, cards, etc.) in a `ScrollView`.
-- Keep fixed footers (e.g. “Don’t have an account?”, primary action button) **outside** the `ScrollView` so they stay at the bottom, or put them inside the scroll if that fits your design.
+- Keep fixed footers (e.g. "Don't have an account?", primary action button) **outside** the `ScrollView` so they stay at the bottom, or put them inside the scroll if that fits your design.
 - Use a single main container (e.g. `VStack`) with the scroll and optional footer; avoid relying on fixed `Spacer()` for layout when content can grow.
 
 ### 4. Add .keyboardResponsive() when the screen has text fields
 
 - Apply `.keyboardResponsive()` to the **main container** that should shift up (e.g. the root `VStack` or the view that has the root padding).
 - Use it on screens that contain `TextField` / `SecureField` (or other focusable inputs) so the focused field stays visible when the keyboard appears.
-- Screens with no text fields don’t need `.keyboardResponsive()`.
+- Screens with no text fields don't need `.keyboardResponsive()`.
 
 ### 5. Verify the app compiles
 
@@ -148,8 +148,8 @@ Adjust structure (e.g. `HStack`, sections, nested `ScrollView`) to match the scr
 | -------------------------------------------------- | ------------------------------------------------------ |
 | GeometryReader at root                             | Padding and spacing can use `geometry.size` and scale. |
 | Proportional padding/spacing                       | Same relative look on any device size.                 |
-| ScrollView for main content                        | Long or form-like content doesn’t get clipped.         |
-| .keyboardResponsive() (when there are text fields) | Keyboard doesn’t cover the active field.               |
+| ScrollView for main content                        | Long or form-like content doesn't get clipped.         |
+| .keyboardResponsive() (when there are text fields) | Keyboard doesn't cover the active field.               |
 | Verify build after changes                         | No broken or non-compiling code.                       |
 
 

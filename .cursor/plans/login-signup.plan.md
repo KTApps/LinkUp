@@ -1,5 +1,5 @@
 ---
-name: LinkUp Login SignUp Plan
+name: Login signup
 overview: "Step-by-step plan to add login and sign up to your LinkUp iOS app, following the same pattern as SONDR_V1: one auth \"brain\" (AuthState), Firebase Auth for sign-in/sign-up, Firestore for user profile, and two screens (LogInView, SignUpView) that switch to the main app when the user is logged in."
 todos: []
 isProject: false
