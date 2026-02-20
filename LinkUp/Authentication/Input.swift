@@ -17,8 +17,7 @@ struct Input: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.subheadline)
-                .fontWeight(.medium)
+                .font(Typography.subheadlineMedium)
                 .foregroundStyle(.secondary)
 
             if secureField {

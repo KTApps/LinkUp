@@ -1,0 +1,18 @@
+---
+description: When completing plan steps, always verify the app compiles
+alwaysApply: true
+---
+
+# Plan steps: verify build
+
+When the user asks you to **complete**, **perform**, **do**, or otherwise carry out a **step** (or steps) from a plan in **`.cursor/plans/`**, you must:
+
+1. **Verify the app compiles** before considering the step done.
+2. Run a build (e.g. `xcodebuild` for this project) and fix any compile errors if the build fails.
+3. Do not deliver code for a plan step and stop without having confirmed a successful build.
+
+If the build fails due to the changes you made, fix the errors and rebuild until the project compiles. Only then report the step as complete.
+
+**In scope:** Any request that involves executing or implementing a step from a plan file under `.cursor/plans/` (e.g. "perform step 2", "complete step 1 of the responsive design plan", "do step 3").
+
+**Note:** If the build fails for environment/sandbox reasons (e.g. simulator service unavailable, package resolution permissions), say so and suggest the user build in Xcode to confirm; the rule still requires that you attempt a build and that the code you produced is correct.

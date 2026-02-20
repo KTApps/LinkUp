@@ -17,53 +17,58 @@ struct SignUpView: View {
     @State private var password = ""
 
     var body: some View {
-        VStack(spacing: 24) {
-            Text("LinkUp")
-                .font(.largeTitle)
-                .fontWeight(.bold)
+        GeometryReader { geometry in
+            VStack(spacing: geometry.size.height * 0.03) {
+                ScrollView {
+                    VStack(spacing: geometry.size.height * 0.03) {
+                        Text("LinkUp")
+                            .font(Typography.title)
 
-            VStack(spacing: 16) {
-                Input(text: $username, title: "Username", placeholder: "Choose a username")
-                Input(text: $email, title: "Email", placeholder: "name@example.com")
-                Input(
-                    text: $password,
-                    title: "Password",
-                    placeholder: "******",
-                    secureField: true
-                )
+                        VStack(spacing: geometry.size.height * 0.02) {
+                            Input(text: $username, title: "Username", placeholder: "Choose a username")
+                            Input(text: $email, title: "Email", placeholder: "name@example.com")
+                            Input(
+                                text: $password,
+                                title: "Password",
+                                placeholder: "******",
+                                secureField: true
+                            )
+
+                            Button {
+                                Task {
+                                    await authState.signUp(
+                                        withEmail: email,
+                                        password: password,
+                                        username: username
+                                    )
+                                }
+                            } label: {
+                                Text("SIGN UP")
+                                    .font(Typography.headline)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 12)
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        .padding(.horizontal)
+                    }
+                }
 
                 Button {
-                    Task {
-                        await authState.signUp(
-                            withEmail: email,
-                            password: password,
-                            username: username
-                        )
-                    }
+                    dismiss()
                 } label: {
-                    Text("SIGN UP")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
+                    HStack(spacing: 4) {
+                        Text("Already have an account?")
+                            .font(Typography.subheadline)
+                        Text("LOG IN")
+                            .font(Typography.subheadlineSemibold)
+                    }
                 }
-                .buttonStyle(.borderedProminent)
             }
-            .padding(.horizontal)
-
-            Spacer()
-
-            Button {
-                dismiss()
-            } label: {
-                HStack(spacing: 4) {
-                    Text("Already have an account?")
-                    Text("LOG IN")
-                        .fontWeight(.semibold)
-                }
-                .font(.subheadline)
-            }
+            .padding(.horizontal, geometry.size.width * 0.05)
+            .padding(.vertical, geometry.size.height * 0.05)
+            .keyboardResponsive()
         }
-        .padding()
         .alert("Sign up failed", isPresented: $authState.signUpError) {
             Button("Try again") {
                 authState.signUpError = false

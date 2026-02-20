@@ -17,59 +17,64 @@ struct LogInView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 24) {
-                Text("LinkUp")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+            GeometryReader { geometry in
+                VStack(spacing: geometry.size.height * 0.03) {
+                    ScrollView {
+                        VStack(spacing: geometry.size.height * 0.03) {
+                            Text("LinkUp")
+                                .font(Typography.title)
 
-                VStack(spacing: 16) {
-                    Input(text: $email, title: "Email", placeholder: "name@example.com")
-                    Input(
-                        text: $password,
-                        title: "Password",
-                        placeholder: "******",
-                        secureField: !showPassword
-                    )
-                    .overlay(alignment: .topTrailing) {
-                        Button {
-                            showPassword.toggle()
-                        } label: {
-                            Image(systemName: showPassword ? "eye.slash" : "eye")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                            VStack(spacing: geometry.size.height * 0.02) {
+                                Input(text: $email, title: "Email", placeholder: "name@example.com")
+                                Input(
+                                    text: $password,
+                                    title: "Password",
+                                    placeholder: "******",
+                                    secureField: !showPassword
+                                )
+                                .overlay(alignment: .topTrailing) {
+                                    Button {
+                                        showPassword.toggle()
+                                    } label: {
+                                        Image(systemName: showPassword ? "eye.slash" : "eye")
+                                            .font(Typography.subheadline)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                    .padding(.top, geometry.size.height * 0.045)
+                                    .padding(.trailing, geometry.size.width * 0.03)
+                                }
+
+                                Button {
+                                    Task {
+                                        await authState.logIn(withEmail: email, password: password)
+                                    }
+                                } label: {
+                                    Text("LOG IN")
+                                        .font(Typography.headline)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, 12)
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                            .padding(.horizontal)
                         }
-                        .padding(.top, 37)   // align with text field (Input title + spacing)
-                        .padding(.trailing, 12)
                     }
 
-                    Button {
-                        Task {
-                            await authState.logIn(withEmail: email, password: password)
-                        }
+                    NavigationLink {
+                        SignUpView(authState: authState)
                     } label: {
-                        Text("LOG IN")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 12)
+                        HStack(spacing: 4) {
+                            Text("Don't have an account?")
+                                .font(Typography.subheadline)
+                            Text("SIGN UP")
+                                .font(Typography.subheadlineSemibold)
+                        }
                     }
-                    .buttonStyle(.borderedProminent)
                 }
-                .padding(.horizontal)
-
-                Spacer()
-
-                NavigationLink {
-                    SignUpView(authState: authState)
-                } label: {
-                    HStack(spacing: 4) {
-                        Text("Don't have an account?")
-                        Text("SIGN UP")
-                            .fontWeight(.semibold)
-                    }
-                    .font(.subheadline)
-                }
+                .padding(.horizontal, geometry.size.width * 0.05)
+                .padding(.vertical, geometry.size.height * 0.05)
+                .keyboardResponsive()
             }
-            .padding()
             .alert("Log in failed", isPresented: $authState.logInError) {
                 Button("Try again") {
                     authState.logInError = false
