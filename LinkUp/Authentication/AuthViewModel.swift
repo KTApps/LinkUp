@@ -13,18 +13,23 @@ import FirebaseFirestore
 
 extension AuthState {
 
-    /// Sign up with email, password, and username. Checks username uniqueness in Firestore,
-    /// creates Firebase Auth user, writes profile to `users/<uid>`, then loads current user.
+    /// Sign up with email, password, and username. Checks username uniqueness via `usernames`
+    /// (allowed when not signed in), creates Firebase Auth user, writes profile to `users/<uid>`
+    /// and claim to `usernames/<lowercase-username>`, then loads current user.
     func signUp(withEmail email: String, password: String, username: String) async {
         signUpError = false
         usernameExists = false
 
-        do {
-            let querySnapshot = try await databaseRef.collection("users")
-                .whereField("AuthenticationData.username", isEqualTo: username)
-                .getDocuments()
+        let normalizedUsername = username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedUsername.isEmpty else {
+            signUpError = true
+            return
+        }
 
-            if !querySnapshot.isEmpty {
+        do {
+            // Check username availability (usernames collection is readable without auth).
+            let usernameDoc = try await databaseRef.collection("usernames").document(normalizedUsername).getDocument()
+            if usernameDoc.exists {
                 usernameExists = true
                 return
             }
@@ -36,6 +41,8 @@ extension AuthState {
             let encodedUser = try Firestore.Encoder().encode(user)
             let userRef = databaseRef.collection("users").document(user.id)
             try await userRef.setData(["AuthenticationData": encodedUser])
+
+            try await databaseRef.collection("usernames").document(normalizedUsername).setData(["uid": result.user.uid])
 
             await listenForUser()
         } catch {

@@ -1,15 +1,18 @@
 rules_version = '2';
 // LinkUp Firestore security rules (Step 6 — Login SignUp plan).
 // User document shape: users/<uid> with map "AuthenticationData" (id, username, email).
+// Usernames: usernames/<lowercase-username> with { uid: string } for sign-up uniqueness check.
 service cloud.firestore {
   match /databases/{database}/documents {
     // Only the signed-in user can read/write their own document.
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    // Anyone can read (to check "is this username taken?" before sign-up). Only signed-in user can create/update/delete their claim.
+    match /usernames/{username} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && resource.data.uid == request.auth.uid;
+    }
   }
 }
-// Note: The app's sign-up flow checks username uniqueness with a client query on users.
-// That query runs before the user is created, so it will be denied by these rules. To fix,
-// use a Cloud Function for sign-up (check username + create user + write Firestore) or
-// a separate "usernames" collection with rules that allow the check.
