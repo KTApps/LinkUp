@@ -1,0 +1,23 @@
+---
+description: LinkUp app color theme — use AuthTheme (black, white, cyan) for all screens
+alwaysApply: true
+---
+
+# App color theme
+
+LinkUp uses a **single three-color theme** across the whole app. Do not use the light/grey/blue palette from design mockups or wireframes.
+
+## Palette
+
+- **Background:** Black (`AuthTheme.background`)
+- **Primary text / borders:** White (`AuthTheme.primary`)
+- **Secondary text (labels, hints):** White at 60% opacity (`AuthTheme.secondary`)
+- **Accent (buttons, links, focus):** Cyan `#00D4FF` (`AuthTheme.accent`)
+
+## Where it’s defined
+
+Colors are in **`LinkUp/Authentication/AuthTheme.swift`**. Use `AuthTheme.background`, `AuthTheme.primary`, `AuthTheme.secondary`, and `AuthTheme.accent` for all screens (auth, messages, polls, settings, etc.), not system greys or mockup colors.
+
+## Design mockups
+
+When implementing screens from the LinkUp Design image (or any mockup), follow the **layout and structure** from the design, but always apply the **AuthTheme** colors above. Ignore mockup colours (e.g. white backgrounds, grey text, blue accents from the image).

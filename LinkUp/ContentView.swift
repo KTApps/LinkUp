@@ -7,18 +7,78 @@
 
 import SwiftUI
 
-/// Main app view when the user is logged in.
+/// Main app view when the user is logged in. TabView with Messages, Plus, and Calendar tabs.
 struct ContentView: View {
+    @ObservedObject var authState: AuthState
+    @State private var selectedTab: SelectedTab = .plus
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            MessagesPlaceholderView(authState: authState)
+                .tabItem {
+                    Label("Messages", systemImage: "paperplane.fill")
+                }
+                .tag(SelectedTab.messages)
+
+            PlusPlaceholderView(authState: authState)
+                .tabItem {
+                    Label("Plus", systemImage: "plus.circle.fill")
+                }
+                .tag(SelectedTab.plus)
+
+            CalendarPlaceholderView(authState: authState)
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+                .tag(SelectedTab.calendar)
+        }
+        .tint(AuthTheme.accent)
+        .toolbarBackground(AuthTheme.background, for: .tabBar)
+        .toolbarColorScheme(.dark, for: .tabBar)
+    }
+}
+
+private enum SelectedTab: String {
+    case messages
+    case plus
+    case calendar
+}
+
+// MARK: - Placeholder tab content (Option A: inline in same file)
+
+private struct MessagesPlaceholderView: View {
     @ObservedObject var authState: AuthState
 
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+        Text("Messages")
+            .font(.title2)
+            .foregroundStyle(AuthTheme.primary)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AuthTheme.background)
+    }
+}
+
+private struct PlusPlaceholderView: View {
+    @ObservedObject var authState: AuthState
+
+    var body: some View {
+        Text("Plus")
+            .font(.title2)
+            .foregroundStyle(AuthTheme.primary)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AuthTheme.background)
+    }
+}
+
+private struct CalendarPlaceholderView: View {
+    @ObservedObject var authState: AuthState
+
+    var body: some View {
+        Text("Calendar")
+            .font(.title2)
+            .foregroundStyle(AuthTheme.primary)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AuthTheme.background)
     }
 }
 
