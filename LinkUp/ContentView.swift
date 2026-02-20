@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-/// Main app view when the user is logged in. TabView with Messages, Plus, and Calendar tabs.
+/// Main app view when the user is logged in. TabView with Polls (default), Messages, Plus, and Calendar tabs.
 struct ContentView: View {
     @ObservedObject var authState: AuthState
-    @State private var selectedTab: SelectedTab = .plus
+    @State private var selectedTab: SelectedTab = .polls
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -19,10 +19,16 @@ struct ContentView: View {
                     Label("Messages", systemImage: "paperplane.fill")
                 }
                 .tag(SelectedTab.messages)
+            
+            PollsTabView(authState: authState)
+                .tabItem {
+                    Label("Polls", systemImage: "chart.bar.doc.horizontal")
+                }
+                .tag(SelectedTab.polls)
 
             PlusPlaceholderView(authState: authState)
                 .tabItem {
-                    Label("Plus", systemImage: "plus.circle.fill")
+                    Label("Add Poll", systemImage: "plus.circle.fill")
                 }
                 .tag(SelectedTab.plus)
 
@@ -39,12 +45,23 @@ struct ContentView: View {
 }
 
 private enum SelectedTab: String {
+    case polls
     case messages
     case plus
     case calendar
 }
 
 // MARK: - Placeholder tab content (Option A: inline in same file)
+
+private struct PollsTabView: View {
+    @ObservedObject var authState: AuthState
+
+    var body: some View {
+        NavigationStack {
+            PollsView()
+        }
+    }
+}
 
 private struct MessagesPlaceholderView: View {
     @ObservedObject var authState: AuthState
