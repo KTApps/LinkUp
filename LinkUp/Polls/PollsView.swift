@@ -11,6 +11,7 @@ private let headerBottomPadding: CGFloat = 10
 /// Main poll page: vertical list of poll cards (hardcoded data).
 /// Custom header with settings (top left); content scrolls underneath the header like the tab bar.
 struct PollsView: View {
+    @ObservedObject var authState: AuthState
     @State private var polls: [Poll] = HardcodedPolls.sample
 
     var body: some View {
@@ -43,7 +44,7 @@ struct PollsView: View {
                     .font(.system(size: 32))
                     .foregroundStyle(AuthTheme.secondary)
 
-                Text("username")
+                Text(authState.currentUser?.username ?? "username")
                     .font(.subheadline)
                     .foregroundStyle(AuthTheme.primary)
 
@@ -81,6 +82,6 @@ struct PollsView: View {
 
 #Preview {
     NavigationStack {
-        PollsView()
+        PollsView(authState: AuthState())
     }
 }

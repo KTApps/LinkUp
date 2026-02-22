@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            PollsView()
+            PollsView(authState: authState)
                 .toolbarBackground(AuthTheme.background, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
