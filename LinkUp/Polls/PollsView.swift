@@ -8,32 +8,32 @@ import PhotosUI
 import UIKit
 import UniformTypeIdentifiers
 
-private let headerBarHeight: CGFloat = 44
-private let headerBottomPadding: CGFloat = 10
+private let headerBarHeight: CGFloat = 20
+private let headerBottomPadding: CGFloat = 0
 
-/// Main poll page: vertical list of poll cards (hardcoded data).
-/// Custom header with settings (top left); content scrolls underneath the header like the tab bar.
+/// Main poll page: one poll per page; swipe top card to send to back.
+private let deckHorizontalPadding: CGFloat = 16
+private let deckBottomPadding: CGFloat = 15
+private let swipeThreshold: CGFloat = 100
+private let swipeAnimationDuration: Double = 0.25
+private let cardRotationPerPoint: Double = 0.12
+private let underlyingCardRevealRotation: Double = 15
+private let underlyingCardFadeStartRotation: Double = 22
+
 struct PollsView: View {
     @ObservedObject var authState: AuthState
     var onOpenSettings: () -> Void
     @State private var polls: [Poll] = HardcodedPolls.sample
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isUploadingProfileImage = false
+    @State private var topCardDragOffset: CGFloat = 0
+    @State private var isSendingTopToBack = false
+    @State private var isBringingBackToFront = false
 
     var body: some View {
         GeometryReader { geometry in
             ZStack(alignment: .top) {
-                ScrollView {
-                    VStack(spacing: geometry.size.height * 0.03) {
-                        ForEach(polls.indices, id: \.self) { index in
-                            PollCardView(poll: $polls[index])
-                        }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, geometry.size.width * 0.05)
-                    .padding(.top, headerBarHeight + headerBottomPadding + geometry.safeAreaInsets.top)
-                    .padding(.bottom, geometry.size.height * 0.03)
-                }
+                deckContent(geometry: geometry)
 
                 pollsHeader(safeAreaTop: geometry.safeAreaInsets.top)
             }
@@ -41,6 +41,127 @@ struct PollsView: View {
             .background(AuthTheme.background)
             .toolbar(.hidden, for: .navigationBar)
         }
+    }
+
+    @ViewBuilder
+    private func deckContent(geometry: GeometryProxy) -> some View {
+        let width = geometry.size.width
+        let contentTop = max(0, headerBarHeight + headerBottomPadding + geometry.safeAreaInsets.top - 20)
+
+        Group {
+            if polls.isEmpty {
+                emptyDeckView
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.top, contentTop)
+                    .padding(.bottom, deckBottomPadding)
+            } else {
+                let topCardRotation = Double(topCardDragOffset) * cardRotationPerPoint
+                let underlyingOpacity: Double = {
+                    let absRotation = abs(topCardRotation)
+                    if absRotation < underlyingCardFadeStartRotation { return 0 }
+                    if absRotation >= underlyingCardRevealRotation { return 1 }
+                    return (absRotation - underlyingCardFadeStartRotation) / (underlyingCardRevealRotation - underlyingCardFadeStartRotation)
+                }()
+
+                ZStack(alignment: .top) {
+                    if polls.count > 1 {
+                        PollCardView(poll: $polls[1])
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.horizontal, deckHorizontalPadding)
+                            .padding(.top, contentTop)
+                            .padding(.bottom, deckBottomPadding)
+                            .opacity(topCardDragOffset < 0 ? underlyingOpacity : 0)
+                            .allowsHitTesting(false)
+                            .zIndex(0)
+                    }
+                    if polls.count > 1 {
+                        PollCardView(poll: $polls[polls.count - 1])
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.horizontal, deckHorizontalPadding)
+                            .padding(.top, contentTop)
+                            .padding(.bottom, deckBottomPadding)
+                            .opacity(topCardDragOffset > 0 ? underlyingOpacity : 0)
+                            .allowsHitTesting(false)
+                            .zIndex(0)
+                    }
+
+                    PollCardView(poll: $polls[0])
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, deckHorizontalPadding)
+                        .padding(.top, contentTop)
+                        .padding(.bottom, deckBottomPadding)
+                        .offset(x: topCardDragOffset)
+                        .rotation3DEffect(
+                            .degrees(Double(topCardDragOffset) * cardRotationPerPoint),
+                            axis: (x: 0, y: 0, z: 1),
+                            perspective: 0.4
+                        )
+                        .zIndex(1)
+                        .gesture(
+                            DragGesture(minimumDistance: 20)
+                                .onChanged { value in
+                                    guard !isSendingTopToBack, !isBringingBackToFront else { return }
+                                    topCardDragOffset = value.translation.width
+                                }
+                                .onEnded { value in
+                                    guard !isSendingTopToBack, !isBringingBackToFront else { return }
+                                    if value.translation.width < -swipeThreshold {
+                                        sendTopCardToBack(screenWidth: width)
+                                    } else if value.translation.width > swipeThreshold, polls.count > 1 {
+                                        bringBackCardToFront(screenWidth: width)
+                                    } else {
+                                        withAnimation(.easeOut(duration: swipeAnimationDuration)) {
+                                            topCardDragOffset = 0
+                                        }
+                                    }
+                                }
+                        )
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func sendTopCardToBack(screenWidth: CGFloat) {
+        withAnimation(.easeOut(duration: swipeAnimationDuration)) {
+            isSendingTopToBack = true
+            topCardDragOffset = -screenWidth
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + swipeAnimationDuration) {
+            if !polls.isEmpty {
+                let top = polls[0]
+                polls = Array(polls.dropFirst()) + [top]
+            }
+            topCardDragOffset = 0
+            isSendingTopToBack = false
+        }
+    }
+
+    private func bringBackCardToFront(screenWidth: CGFloat) {
+        withAnimation(.easeOut(duration: swipeAnimationDuration)) {
+            isBringingBackToFront = true
+            topCardDragOffset = screenWidth
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + swipeAnimationDuration) {
+            if polls.count > 1, let last = polls.last {
+                polls = [last] + polls.dropLast()
+            }
+            topCardDragOffset = 0
+            isBringingBackToFront = false
+        }
+    }
+
+    private var emptyDeckView: some View {
+        VStack(spacing: 8) {
+            Text("No polls")
+                .font(Typography.headline)
+                .foregroundStyle(AuthTheme.primary)
+            Text("Swipe through polls when you have some.")
+                .font(Typography.subheadline)
+                .foregroundStyle(AuthTheme.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding()
     }
 
     private func pollsHeader(safeAreaTop: CGFloat) -> some View {
@@ -59,18 +180,16 @@ struct PollsView: View {
                 } label: {
                     Image(systemName: "chart.bar.fill")
                         .font(.system(size: 22))
-                        .foregroundStyle(AuthTheme.secondary)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(HeaderIconButtonStyle())
 
                 Button {
                     onOpenSettings()
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 22))
-                        .foregroundStyle(AuthTheme.secondary)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(HeaderIconButtonStyle())
             }
             .padding(.horizontal, 16)
             .frame(height: headerBarHeight)
@@ -150,6 +269,14 @@ struct PollsView: View {
             // TODO: show error if desired
         }
         selectedPhotoItem = nil
+    }
+}
+
+/// Header icon button: accent when pressed for micro-interaction feedback.
+private struct HeaderIconButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .foregroundStyle(configuration.isPressed ? AuthTheme.accent : AuthTheme.secondary)
     }
 }
 

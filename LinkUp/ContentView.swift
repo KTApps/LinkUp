@@ -32,7 +32,7 @@ struct ContentView: View {
             barButton(title: "Plus", image: "plus.circle.fill", sheet: .plus)
             barButton(title: "Calendar", image: "calendar", sheet: .calendar)
         }
-        .padding(.vertical, 12)
+        .padding(.vertical, 15)
         .background(AuthTheme.background)
         .overlay(alignment: .top) {
             Rectangle()
