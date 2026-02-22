@@ -13,6 +13,7 @@ struct AuthModel: Identifiable, Codable {
     let id: String
     let username: String
     let email: String
+    var profileImageURL: String?
 
     var initial: String {
         username.first?.uppercased() ?? ""

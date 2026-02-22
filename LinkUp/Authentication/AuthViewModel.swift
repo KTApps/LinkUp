@@ -8,6 +8,7 @@
 import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseStorage
 
 // MARK: - Sign up, log in, listen for user
 
@@ -37,7 +38,7 @@ extension AuthState {
             let result = try await authRef.createUser(withEmail: email, password: password)
             userSession = result.user
 
-            let user = AuthModel(id: result.user.uid, username: username, email: email)
+            let user = AuthModel(id: result.user.uid, username: username, email: email, profileImageURL: nil)
             let encodedUser = try Firestore.Encoder().encode(user)
             let userRef = databaseRef.collection("users").document(user.id)
             try await userRef.setData(["AuthenticationData": encodedUser])
@@ -85,6 +86,30 @@ extension AuthState {
             currentUser = decoded
         } catch {
             // Non-fatal: UI can still show session
+        }
+    }
+
+    /// Upload profile image to Storage, store download URL in Firestore, refresh currentUser.
+    func uploadProfileImage(jpegData: Data) async {
+        guard let uid = authRef.currentUser?.uid else { return }
+        guard let existing = currentUser else { return }
+
+        do {
+            let ref = storageRef.child("profile_images/\(uid).jpg")
+            _ = try await ref.putDataAsync(jpegData)
+            let urlString = try await ref.downloadURL().absoluteString
+
+            let updated = AuthModel(
+                id: existing.id,
+                username: existing.username,
+                email: existing.email,
+                profileImageURL: urlString
+            )
+            let encoded = try Firestore.Encoder().encode(updated)
+            try await databaseRef.collection("users").document(uid).setData(["AuthenticationData": encoded])
+            await listenForUser()
+        } catch {
+            // TODO: surface profileImageUploadError if desired
         }
     }
 }

@@ -4,6 +4,9 @@
 //
 
 import SwiftUI
+import PhotosUI
+import UIKit
+import UniformTypeIdentifiers
 
 private let headerBarHeight: CGFloat = 44
 private let headerBottomPadding: CGFloat = 10
@@ -13,6 +16,8 @@ private let headerBottomPadding: CGFloat = 10
 struct PollsView: View {
     @ObservedObject var authState: AuthState
     @State private var polls: [Poll] = HardcodedPolls.sample
+    @State private var selectedPhotoItem: PhotosPickerItem?
+    @State private var isUploadingProfileImage = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -40,9 +45,7 @@ struct PollsView: View {
     private func pollsHeader(safeAreaTop: CGFloat) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 32))
-                    .foregroundStyle(AuthTheme.secondary)
+                profileImageButton
 
                 Text(authState.currentUser?.username ?? "username")
                     .font(.subheadline)
@@ -77,6 +80,84 @@ struct PollsView: View {
         .frame(maxWidth: .infinity, alignment: .top)
         .background(AuthTheme.background)
         .ignoresSafeArea(edges: .top)
+        .onChange(of: selectedPhotoItem) { _, newItem in
+            Task {
+                await handleSelectedPhotoItem(newItem)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var profileImageButton: some View {
+        PhotosPicker(
+            selection: $selectedPhotoItem,
+            matching: .images,
+            photoLibrary: .shared()
+        ) {
+            Group {
+                if let urlString = authState.currentUser?.profileImageURL,
+                   let url = URL(string: urlString) {
+                    AsyncImage(url: url) { phase in
+                        switch phase {
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        case .failure, .empty:
+                            profileImagePlaceholder
+                        @unknown default:
+                            profileImagePlaceholder
+                        }
+                    }
+                } else {
+                    profileImagePlaceholder
+                }
+            }
+            .frame(width: 32, height: 32)
+            .clipShape(Circle())
+            .overlay(Circle().stroke(AuthTheme.secondary.opacity(0.5), lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+        .disabled(isUploadingProfileImage)
+        .overlay {
+            if isUploadingProfileImage {
+                Circle()
+                    .fill(AuthTheme.background.opacity(0.7))
+                    .frame(width: 32, height: 32)
+                ProgressView()
+                    .tint(AuthTheme.primary)
+            }
+        }
+    }
+
+    private var profileImagePlaceholder: some View {
+        Image(systemName: "person.circle.fill")
+            .font(.system(size: 32))
+            .foregroundStyle(AuthTheme.secondary)
+    }
+
+    private func handleSelectedPhotoItem(_ item: PhotosPickerItem?) async {
+        guard let item else { return }
+        isUploadingProfileImage = true
+        defer { isUploadingProfileImage = false }
+
+        do {
+            guard let loaded = try await item.loadTransferable(type: ProfileImageData.self) else { return }
+            let jpegData = UIImage(data: loaded.data)?.jpegData(compressionQuality: 0.8) ?? loaded.data
+            await authState.uploadProfileImage(jpegData: jpegData)
+        } catch {
+            // TODO: show error if desired
+        }
+        selectedPhotoItem = nil
+    }
+}
+
+private struct ProfileImageData: Transferable {
+    let data: Data
+    static var transferRepresentation: some TransferRepresentation {
+        DataRepresentation(importedContentType: UTType.image) { data in
+            ProfileImageData(data: data)
+        }
     }
 }
 
