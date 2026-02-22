@@ -14,7 +14,7 @@ struct ContentView: View {
 
     var body: some View {
         NavigationStack {
-            PollsView(authState: authState)
+            PollsView(authState: authState, onOpenSettings: { presentedSheet = .settings })
                 .toolbarBackground(AuthTheme.background, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -72,6 +72,10 @@ struct ContentView: View {
             SheetHost(title: "Calendar") {
                 CalendarPlaceholderView(authState: authState)
             }
+        case .settings:
+            SheetHost(title: "Settings") {
+                SettingsView(authState: authState)
+            }
         }
     }
 }
@@ -80,6 +84,7 @@ private enum AppSheet: String, Identifiable {
     case messages
     case plus
     case calendar
+    case settings
     var id: String { rawValue }
 }
 

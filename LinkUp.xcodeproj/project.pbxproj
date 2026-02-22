@@ -27,6 +27,7 @@
 		086A7A042F472900007E69CC /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A012F472900007E69CC /* Poll.swift */; };
 		086A7A052F472900007E69CC /* PollCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A022F472900007E69CC /* PollCardView.swift */; };
 		086A7A062F472900007E69CC /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A032F472900007E69CC /* PollsView.swift */; };
+		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
 		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
 		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
 		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
@@ -79,6 +80,7 @@
 		086A7A012F472900007E69CC /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		086A7A022F472900007E69CC /* PollCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardView.swift; sourceTree = "<group>"; };
 		086A7A032F472900007E69CC /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
+		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +171,7 @@
 				086A745F2F472900007E69CC /* AuthState.swift */,
 				086A74672F472900007E69CC /* Input.swift */,
 				086A74652F472900007E69CC /* LogInView.swift */,
+				086A7A0A2F472900007E69CC /* SettingsView.swift */,
 				086A74692F472900007E69CC /* SignUpView.swift */,
 			);
 			path = Authentication;
@@ -353,6 +356,7 @@
 				086A7A042F472900007E69CC /* Poll.swift in Sources */,
 				086A7A052F472900007E69CC /* PollCardView.swift in Sources */,
 				086A7A062F472900007E69CC /* PollsView.swift in Sources */,
+				086A7A092F472900007E69CC /* SettingsView.swift in Sources */,
 				086A74622F472900007E69CC /* StartView.swift in Sources */,
 				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,
 				080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */,

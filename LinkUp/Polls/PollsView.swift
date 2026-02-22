@@ -15,6 +15,7 @@ private let headerBottomPadding: CGFloat = 10
 /// Custom header with settings (top left); content scrolls underneath the header like the tab bar.
 struct PollsView: View {
     @ObservedObject var authState: AuthState
+    var onOpenSettings: () -> Void
     @State private var polls: [Poll] = HardcodedPolls.sample
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isUploadingProfileImage = false
@@ -63,7 +64,7 @@ struct PollsView: View {
                 .buttonStyle(.plain)
 
                 Button {
-                    // TODO: open settings
+                    onOpenSettings()
                 } label: {
                     Image(systemName: "gearshape.fill")
                         .font(.system(size: 22))
@@ -163,6 +164,6 @@ private struct ProfileImageData: Transferable {
 
 #Preview {
     NavigationStack {
-        PollsView(authState: AuthState())
+        PollsView(authState: AuthState(), onOpenSettings: {})
     }
 }

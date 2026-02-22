@@ -64,6 +64,13 @@ extension AuthState {
         }
     }
 
+    /// Sign out: clear Firebase Auth session and local state. StartView will show LogInView.
+    func signOut() {
+        try? authRef.signOut()
+        userSession = nil
+        currentUser = nil
+    }
+
     /// Restore session on app launch (e.g. from persisted Firebase Auth). Call from root view .onAppear.
     func restoreSession() async {
         guard let user = authRef.currentUser else { return }
@@ -111,5 +118,23 @@ extension AuthState {
         } catch {
             // TODO: surface profileImageUploadError if desired
         }
+    }
+
+    /// Delete account: remove Storage profile image, Firestore user + usernames claim, then Firebase Auth user. Clears session.
+    func deleteAccount() async throws {
+        guard let uid = authRef.currentUser?.uid else { return }
+        guard let existing = currentUser else { return }
+        let normalizedUsername = existing.username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let profileRef = storageRef.child("profile_images/\(uid).jpg")
+        try? await profileRef.delete()
+
+        try await databaseRef.collection("users").document(uid).delete()
+        try await databaseRef.collection("usernames").document(normalizedUsername).delete()
+
+        guard let user = authRef.currentUser else { return }
+        try await user.delete()
+        userSession = nil
+        currentUser = nil
     }
 }
