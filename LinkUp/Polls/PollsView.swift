@@ -209,6 +209,7 @@ struct PollsView: View {
 
     @ViewBuilder
     private var profileImageButton: some View {
+        let initial = authState.currentUser?.username.first.map { String($0).uppercased() } ?? "?"
         PhotosPicker(
             selection: $selectedPhotoItem,
             matching: .images,
@@ -224,13 +225,13 @@ struct PollsView: View {
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                         case .failure, .empty:
-                            profileImagePlaceholder
+                            profileImagePlaceholder(initial: initial)
                         @unknown default:
-                            profileImagePlaceholder
+                            profileImagePlaceholder(initial: initial)
                         }
                     }
                 } else {
-                    profileImagePlaceholder
+                    profileImagePlaceholder(initial: initial)
                 }
             }
             .frame(width: 32, height: 32)
@@ -250,10 +251,12 @@ struct PollsView: View {
         }
     }
 
-    private var profileImagePlaceholder: some View {
-        Image(systemName: "person.circle.fill")
-            .font(.system(size: 32))
-            .foregroundStyle(AuthTheme.secondary)
+    private func profileImagePlaceholder(initial: String) -> some View {
+        Text(initial)
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(AuthTheme.primary)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Circle().fill(AuthTheme.secondary.opacity(0.4)))
     }
 
     private func handleSelectedPhotoItem(_ item: PhotosPickerItem?) async {
