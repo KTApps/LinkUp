@@ -7,19 +7,36 @@
 
 import SwiftUI
 
+/// Route for pushed pages (not sheets). Bar chart opens History.
+private enum AppRoute: Hashable {
+    case history
+}
+
 /// Main app view when the user is logged in. Polls is the root; Messages, Plus, and Calendar open as sheets (back button or swipe down to return).
 struct ContentView: View {
     @ObservedObject var authState: AuthState
     @State private var polls: [Poll] = HardcodedPolls.sample
     @State private var presentedSheet: AppSheet?
+    @State private var navigationPath: [AppRoute] = []
 
     var body: some View {
-        NavigationStack {
-            PollsView(authState: authState, polls: $polls, onOpenSettings: { presentedSheet = .settings })
+        NavigationStack(path: $navigationPath) {
+            PollsView(
+                authState: authState,
+                polls: $polls,
+                onOpenSettings: { presentedSheet = .settings },
+                onOpenPollHistory: { navigationPath.append(.history) }
+            )
                 .toolbarBackground(AuthTheme.background, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     bottomBar
+                }
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .history:
+                        PollHistoryView(authState: authState, polls: polls)
+                    }
                 }
         }
         .sheet(item: $presentedSheet) { sheet in
@@ -109,7 +126,7 @@ private struct SheetHost<Content: View>: View {
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
-                        Button("Back") {
+                        Button("< Back") {
                             dismiss()
                         }
                         .foregroundStyle(AuthTheme.accent)

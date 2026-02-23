@@ -24,6 +24,7 @@ struct PollsView: View {
     @ObservedObject var authState: AuthState
     @Binding var polls: [Poll]
     var onOpenSettings: () -> Void
+    var onOpenPollHistory: () -> Void
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isUploadingProfileImage = false
     @State private var topCardDragOffset: CGFloat = 0
@@ -212,7 +213,7 @@ struct PollsView: View {
                 Spacer()
 
                 Button {
-                    // TODO: open bar chart / stats
+                    onOpenPollHistory()
                 } label: {
                     Image(systemName: "chart.bar.fill")
                         .font(.system(size: 22))
@@ -330,6 +331,6 @@ private struct ProfileImageData: Transferable {
 
 #Preview {
     NavigationStack {
-        PollsView(authState: AuthState(), polls: .constant(HardcodedPolls.sample), onOpenSettings: {})
+        PollsView(authState: AuthState(), polls: .constant(HardcodedPolls.sample), onOpenSettings: {}, onOpenPollHistory: {})
     }
 }
