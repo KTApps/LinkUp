@@ -52,7 +52,10 @@ struct CalendarView: View {
                 .padding(.vertical, 24)
             }
             .onAppear {
-                proxy.scrollTo(currentMonthStart, anchor: .top)
+                // Defer scroll so LazyVStack has laid out the current month
+                DispatchQueue.main.async {
+                    proxy.scrollTo(currentMonthStart, anchor: .top)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
