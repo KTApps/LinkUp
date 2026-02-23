@@ -29,6 +29,7 @@
 		086A7A062F472900007E69CC /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A032F472900007E69CC /* PollsView.swift */; };
 		086A7A0D2F472900007E69CC /* PollService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0B2F472900007E69CC /* PollService.swift */; };
 		086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0C2F472900007E69CC /* CreatePollView.swift */; };
+		086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */; };
 		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
 		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
 		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
@@ -84,6 +85,7 @@
 		086A7A032F472900007E69CC /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
 		086A7A0B2F472900007E69CC /* PollService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollService.swift; sourceTree = "<group>"; };
 		086A7A0C2F472900007E69CC /* CreatePollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollView.swift; sourceTree = "<group>"; };
+		086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDetailsPopupView.swift; sourceTree = "<group>"; };
 		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -164,6 +166,7 @@
 				086A7A032F472900007E69CC /* PollsView.swift */,
 				086A7A0B2F472900007E69CC /* PollService.swift */,
 				086A7A0C2F472900007E69CC /* CreatePollView.swift */,
+				086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */,
 			);
 			path = Polls;
 			sourceTree = "<group>";
@@ -364,6 +367,7 @@
 				086A7A062F472900007E69CC /* PollsView.swift in Sources */,
 				086A7A0D2F472900007E69CC /* PollService.swift in Sources */,
 				086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */,
+				086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */,
 				086A7A092F472900007E69CC /* SettingsView.swift in Sources */,
 				086A74622F472900007E69CC /* StartView.swift in Sources */,
 				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,

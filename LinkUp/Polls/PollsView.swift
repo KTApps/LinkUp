@@ -29,6 +29,7 @@ struct PollsView: View {
     @State private var topCardDragOffset: CGFloat = 0
     @State private var isSendingTopToBack = false
     @State private var isBringingBackToFront = false
+    @State private var pollForMoreDetails: Poll?
 
     var body: some View {
         GeometryReader { geometry in
@@ -40,6 +41,37 @@ struct PollsView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(AuthTheme.background)
             .toolbar(.hidden, for: .navigationBar)
+            .overlay {
+                if let poll = pollForMoreDetails {
+                    moreDetailsOverlay(poll: poll)
+                        .transition(.asymmetric(
+                            insertion: .opacity.combined(with: .scale(scale: 0.94)),
+                            removal: .opacity.combined(with: .scale(scale: 0.94))
+                        ))
+                }
+            }
+            .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
+        }
+    }
+
+    @ViewBuilder
+    private func moreDetailsOverlay(poll: Poll) -> some View {
+        ZStack(alignment: .center) {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .overlay(Color.black.opacity(0.15))
+                .ignoresSafeArea()
+                .onTapGesture {
+                    withAnimation(.easeOut(duration: 0.4)) {
+                        pollForMoreDetails = nil
+                    }
+                }
+
+            MoreDetailsPopupView(poll: poll) {
+                withAnimation(.easeOut(duration: 0.28)) {
+                    pollForMoreDetails = nil
+                }
+            }
         }
     }
 
@@ -85,7 +117,11 @@ struct PollsView: View {
                             .zIndex(0)
                     }
 
-                    PollCardView(poll: $polls[0])
+                    PollCardView(poll: $polls[0], onShowMoreDetails: {
+                        withAnimation(.easeOut(duration: 0.28)) {
+                            pollForMoreDetails = polls[0]
+                        }
+                    })
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, deckHorizontalPadding)
                         .padding(.top, contentTop)

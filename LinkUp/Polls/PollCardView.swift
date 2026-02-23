@@ -13,6 +13,7 @@ private let tapAnimation = Animation.easeOut(duration: 0.15)
 /// Uses AuthTheme; voting updates in-memory state only. Rich motion and clear selected state.
 struct PollCardView: View {
     @Binding var poll: Poll
+    var onShowMoreDetails: (() -> Void)? = nil
     @State private var selectedOptionId: String?
 
     private var total: Int { poll.totalVoteCount }
@@ -46,6 +47,22 @@ struct PollCardView: View {
             RoundedRectangle(cornerRadius: 12)
                 .strokeBorder(AuthTheme.primary.opacity(0.08), lineWidth: 1)
         )
+        .overlay(alignment: .topTrailing) {
+            if onShowMoreDetails != nil {
+                Button {
+                    onShowMoreDetails?()
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .rotationEffect(.degrees(90))
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(AuthTheme.secondary)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .padding(8)
+            }
+        }
     }
 
     private var titleBlock: some View {
