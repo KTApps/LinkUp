@@ -32,6 +32,7 @@
 		086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */; };
 		086A7A122F472900007E69CC /* PollHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A112F472900007E69CC /* PollHistoryView.swift */; };
 		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
+		086A7B132F472900007E69CC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B122F472900007E69CC /* CalendarView.swift */; };
 		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
 		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
 		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
@@ -89,6 +90,7 @@
 		086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDetailsPopupView.swift; sourceTree = "<group>"; };
 		086A7A112F472900007E69CC /* PollHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollHistoryView.swift; sourceTree = "<group>"; };
 		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		086A7B122F472900007E69CC /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 			children = (
 				086A745B2F472900007E69CC /* Authentication */,
 				086A7A002F472900007E69CC /* Polls */,
+				086A7B002F472900007E69CC /* Calendar */,
 				086A745A2F472889007E69CC /* GoogleService-Info.plist */,
 				080FD11A2F4723710022AA9D /* LinkUpApp.swift */,
 				086A746B2F472900007E69CC /* GeometryReader.swift */,
@@ -172,6 +175,14 @@
 				086A7A112F472900007E69CC /* PollHistoryView.swift */,
 			);
 			path = Polls;
+			sourceTree = "<group>";
+		};
+		086A7B002F472900007E69CC /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				086A7B122F472900007E69CC /* CalendarView.swift */,
+			);
+			path = Calendar;
 			sourceTree = "<group>";
 		};
 		086A745B2F472900007E69CC /* Authentication */ = {
@@ -373,6 +384,7 @@
 				086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */,
 				086A7A122F472900007E69CC /* PollHistoryView.swift in Sources */,
 				086A7A092F472900007E69CC /* SettingsView.swift in Sources */,
+				086A7B132F472900007E69CC /* CalendarView.swift in Sources */,
 				086A74622F472900007E69CC /* StartView.swift in Sources */,
 				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,
 				080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */,

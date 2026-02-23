@@ -91,7 +91,7 @@ struct ContentView: View {
             }
         case .calendar:
             SheetHost(title: "Calendar") {
-                CalendarPlaceholderView(authState: authState)
+                CalendarView()
             }
         case .settings:
             SheetHost(title: "Settings") {
@@ -162,17 +162,6 @@ private struct PlusPlaceholderView: View {
     }
 }
 
-private struct CalendarPlaceholderView: View {
-    @ObservedObject var authState: AuthState
-
-    var body: some View {
-        Text("Calendar")
-            .font(.title2)
-            .foregroundStyle(AuthTheme.primary)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AuthTheme.background)
-    }
-}
 
 #Preview {
     ContentView(authState: AuthState())
