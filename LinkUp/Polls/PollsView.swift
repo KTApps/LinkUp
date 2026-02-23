@@ -22,8 +22,8 @@ private let underlyingCardFadeStartRotation: Double = 22
 
 struct PollsView: View {
     @ObservedObject var authState: AuthState
+    @Binding var polls: [Poll]
     var onOpenSettings: () -> Void
-    @State private var polls: [Poll] = HardcodedPolls.sample
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isUploadingProfileImage = false
     @State private var topCardDragOffset: CGFloat = 0
@@ -294,6 +294,6 @@ private struct ProfileImageData: Transferable {
 
 #Preview {
     NavigationStack {
-        PollsView(authState: AuthState(), onOpenSettings: {})
+        PollsView(authState: AuthState(), polls: .constant(HardcodedPolls.sample), onOpenSettings: {})
     }
 }

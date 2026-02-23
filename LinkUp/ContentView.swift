@@ -10,11 +10,12 @@ import SwiftUI
 /// Main app view when the user is logged in. Polls is the root; Messages, Plus, and Calendar open as sheets (back button or swipe down to return).
 struct ContentView: View {
     @ObservedObject var authState: AuthState
+    @State private var polls: [Poll] = HardcodedPolls.sample
     @State private var presentedSheet: AppSheet?
 
     var body: some View {
         NavigationStack {
-            PollsView(authState: authState, onOpenSettings: { presentedSheet = .settings })
+            PollsView(authState: authState, polls: $polls, onOpenSettings: { presentedSheet = .settings })
                 .toolbarBackground(AuthTheme.background, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
@@ -65,8 +66,11 @@ struct ContentView: View {
                 MessagesPlaceholderView(authState: authState)
             }
         case .plus:
-            SheetHost(title: "Plus") {
-                PlusPlaceholderView(authState: authState)
+            SheetHost(title: "Create Poll") {
+                CreatePollView(authState: authState) { poll in
+                    polls.insert(poll, at: 0)
+                    presentedSheet = nil
+                }
             }
         case .calendar:
             SheetHost(title: "Calendar") {
