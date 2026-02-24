@@ -42,7 +42,7 @@ struct SettingsView: View {
         }
         .background(AuthTheme.background)
         .sheet(isPresented: $showAddFriends) {
-            AddFriendsPlaceholderView()
+            AddFriendsView(authState: authState)
         }
         .alert("Delete account?", isPresented: $showDeleteAccountConfirmation) {
             Button("Cancel", role: .cancel) {}
@@ -110,43 +110,6 @@ struct SettingsView: View {
     }
 }
 
-/// Placeholder for Add friends – real friend logic (search, requests) can be added later.
-struct AddFriendsPlaceholderView: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            VStack {
-                Text("Add friends")
-                    .font(.title2)
-                    .foregroundStyle(AuthTheme.primary)
-                Text("Coming soon")
-                    .font(.subheadline)
-                    .foregroundStyle(AuthTheme.secondary)
-                    .padding(.top, 8)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AuthTheme.background)
-            .navigationTitle("Add friends")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AuthTheme.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                    .foregroundStyle(AuthTheme.accent)
-                }
-            }
-        }
-    }
-}
-
 #Preview("Settings") {
     SettingsView(authState: AuthState())
-}
-
-#Preview("Add friends placeholder") {
-    AddFriendsPlaceholderView()
 }

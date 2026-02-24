@@ -91,6 +91,11 @@ extension AuthState {
             }
             let decoded = try Firestore.Decoder().decode(AuthModel.self, from: authData)
             currentUser = decoded
+            // Keep usernames in sync so search/add-friends can show this user's profile photo.
+            if let url = decoded.profileImageURL {
+                let normalizedUsername = decoded.username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+                try? await databaseRef.collection("usernames").document(normalizedUsername).updateData(["profileImageURL": url])
+            }
         } catch {
             // Non-fatal: UI can still show session
         }
@@ -114,6 +119,8 @@ extension AuthState {
             )
             let encoded = try Firestore.Encoder().encode(updated)
             try await databaseRef.collection("users").document(uid).setData(["AuthenticationData": encoded])
+            let normalizedUsername = existing.username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+            try await databaseRef.collection("usernames").document(normalizedUsername).updateData(["profileImageURL": urlString])
             await listenForUser()
         } catch {
             // TODO: surface profileImageUploadError if desired
