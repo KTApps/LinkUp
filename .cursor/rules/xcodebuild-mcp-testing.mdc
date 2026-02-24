@@ -22,3 +22,13 @@ If install fails after a successful build:
    `…/DerivedData/LinkUp-…/Build/Products/Debug-iphonesimulator/LinkUp.app`  
    (find it with `find …/DerivedData/LinkUp-* -name "LinkUp.app" -path "*Debug-iphonesimulator*"` if needed).
 2. Call `install_app_sim` with that path, then `launch_app_sim` (with `bundleId` default **KTApps.LinkUp** set via `session_set_defaults` if needed).
+
+## Seeing build errors (Xcode Diagnostics MCP)
+
+When the user reports build errors or when **XcodeBuildMCP** `build_sim` / `build_run_sim` fails, the assistant should see the actual compile errors so it can fix them:
+
+1. **Use Xcode Diagnostics MCP** (if enabled): Call `get_xcode_projects` to list projects with build logs, then `get_project_diagnostics` with the LinkUp DerivedData directory name (e.g. `LinkUp-gchykhcitygridefhrsqsewjjuin` — use the entry that matches this project). This returns structured errors and warnings (file, line, message, fix-its).
+2. **If Xcode Diagnostics MCP is not available or returns nothing**: Ask the user to paste the build log or error messages from Xcode (e.g. Report navigator or Build log).
+3. **Optional**: Run `ReadLints` on the project or edited files to pick up IDE diagnostics that may match build errors.
+
+**Setup**: Xcode Diagnostics MCP is configured in `~/.cursor/mcp.json` as `XcodeDiagnosticsMCP` (pipx). The user must have run a build at least once (in Xcode or via XcodeBuildMCP) so DerivedData has a build log to parse.

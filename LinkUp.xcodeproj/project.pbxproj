@@ -37,6 +37,11 @@
 		086A7B212F472900007E69CC /* FriendsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B1F2F472900007E69CC /* FriendsService.swift */; };
 		086A7B222F472900007E69CC /* AddFriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B242F472900007E69CC /* AddFriendsView.swift */; };
 		086A7B232F472900007E69CC /* UserRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B252F472900007E69CC /* UserRowView.swift */; };
+		086A7C1A2F472900007E69CC /* ConversationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C182F472900007E69CC /* ConversationModels.swift */; };
+		086A7C1B2F472900007E69CC /* MessagesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C192F472900007E69CC /* MessagesService.swift */; };
+		086A7C1C2F472900007E69CC /* MessagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C1E2F472900007E69CC /* MessagesListView.swift */; };
+		086A7C1D2F472900007E69CC /* ConversationThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C1F2F472900007E69CC /* ConversationThreadView.swift */; };
+		086A7C202F472900007E69CC /* CreateGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C212F472900007E69CC /* CreateGroupView.swift */; };
 		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
 		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
 		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
@@ -99,6 +104,11 @@
 		086A7B1F2F472900007E69CC /* FriendsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsService.swift; sourceTree = "<group>"; };
 		086A7B242F472900007E69CC /* AddFriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsView.swift; sourceTree = "<group>"; };
 		086A7B252F472900007E69CC /* UserRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRowView.swift; sourceTree = "<group>"; };
+		086A7C182F472900007E69CC /* ConversationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationModels.swift; sourceTree = "<group>"; };
+		086A7C192F472900007E69CC /* MessagesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesService.swift; sourceTree = "<group>"; };
+		086A7C1E2F472900007E69CC /* MessagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListView.swift; sourceTree = "<group>"; };
+		086A7C1F2F472900007E69CC /* ConversationThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationThreadView.swift; sourceTree = "<group>"; };
+		086A7C212F472900007E69CC /* CreateGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +167,7 @@
 			children = (
 				086A745B2F472900007E69CC /* Authentication */,
 				086A7B1D2F472900007E69CC /* Friends */,
+				086A7C172F472900007E69CC /* Messages */,
 				086A7A002F472900007E69CC /* Polls */,
 				086A7B002F472900007E69CC /* Calendar */,
 				086A745A2F472889007E69CC /* GoogleService-Info.plist */,
@@ -181,6 +192,18 @@
 				086A7B252F472900007E69CC /* UserRowView.swift */,
 			);
 			path = Friends;
+			sourceTree = "<group>";
+		};
+		086A7C172F472900007E69CC /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				086A7C1E2F472900007E69CC /* MessagesListView.swift */,
+				086A7C182F472900007E69CC /* ConversationModels.swift */,
+				086A7C192F472900007E69CC /* MessagesService.swift */,
+				086A7C1F2F472900007E69CC /* ConversationThreadView.swift */,
+				086A7C212F472900007E69CC /* CreateGroupView.swift */,
+			);
+			path = Messages;
 			sourceTree = "<group>";
 		};
 		086A7A002F472900007E69CC /* Polls */ = {
@@ -409,6 +432,11 @@
 				086A7B212F472900007E69CC /* FriendsService.swift in Sources */,
 				086A7B222F472900007E69CC /* AddFriendsView.swift in Sources */,
 				086A7B232F472900007E69CC /* UserRowView.swift in Sources */,
+				086A7C1A2F472900007E69CC /* ConversationModels.swift in Sources */,
+				086A7C1B2F472900007E69CC /* MessagesService.swift in Sources */,
+				086A7C1C2F472900007E69CC /* MessagesListView.swift in Sources */,
+				086A7C1D2F472900007E69CC /* ConversationThreadView.swift in Sources */,
+				086A7C202F472900007E69CC /* CreateGroupView.swift in Sources */,
 				086A74622F472900007E69CC /* StartView.swift in Sources */,
 				080FD11D2F4723710022AA9D /* ContentView.swift in Sources */,
 				080FD11B2F4723710022AA9D /* LinkUpApp.swift in Sources */,

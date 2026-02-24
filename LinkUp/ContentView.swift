@@ -79,8 +79,8 @@ struct ContentView: View {
     private func sheetContent(for sheet: AppSheet) -> some View {
         switch sheet {
         case .messages:
-            SheetHost(title: "Messages") {
-                MessagesPlaceholderView(authState: authState)
+            SheetHost(title: "Messages", contentOwnsNavigation: true) {
+                MessagesListView(authState: authState)
             }
         case .plus:
             SheetHost(title: "Create Poll") {
@@ -110,28 +110,36 @@ private enum AppSheet: String, Identifiable {
 }
 
 /// Wraps sheet content with a navigation bar and back button; swipe down or tap back to dismiss.
+/// Use `contentOwnsNavigation: true` when content has its own NavigationStack and Back (e.g. MessagesListView).
 private struct SheetHost<Content: View>: View {
     let title: String
+    var contentOwnsNavigation: Bool = false
     @ViewBuilder let content: () -> Content
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationStack {
+        if contentOwnsNavigation {
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(AuthTheme.background)
-                .navigationTitle(title)
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbarBackground(AuthTheme.background, for: .navigationBar)
-                .toolbarColorScheme(.dark, for: .navigationBar)
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button("< Back") {
-                            dismiss()
+        } else {
+            NavigationStack {
+                content()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(AuthTheme.background)
+                    .navigationTitle(title)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(AuthTheme.background, for: .navigationBar)
+                    .toolbarColorScheme(.dark, for: .navigationBar)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("< Back") {
+                                dismiss()
+                            }
+                            .foregroundStyle(AuthTheme.accent)
                         }
-                        .foregroundStyle(AuthTheme.accent)
                     }
-                }
+            }
         }
     }
 }
