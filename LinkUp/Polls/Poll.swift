@@ -22,6 +22,8 @@ struct Poll: Identifiable, Codable {
     var activityDate: Date?
     var activityDescription: String?
     var imageURL: String?
+    /// UID of the user who created the poll; nil for legacy/hardcoded data.
+    var createdBy: String? = nil
 
     var totalVoteCount: Int {
         options.reduce(0) { $0 + $1.count }

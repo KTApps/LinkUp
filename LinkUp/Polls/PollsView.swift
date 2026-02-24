@@ -31,6 +31,9 @@ struct PollsView: View {
     @State private var isSendingTopToBack = false
     @State private var isBringingBackToFront = false
     @State private var pollForMoreDetails: Poll?
+    @State private var pollForOwnerSheet: Poll?
+    @State private var pollForEdit: Poll?
+    @State private var pollToDeleteForConfirmation: Poll?
 
     var body: some View {
         GeometryReader { geometry in
@@ -52,6 +55,144 @@ struct PollsView: View {
                 }
             }
             .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
+            .sheet(item: $pollForOwnerSheet) { poll in
+                pollOwnerActionsSheet(poll: poll)
+            }
+            .sheet(item: $pollForEdit) { poll in
+                NavigationStack {
+                    CreatePollView(authState: authState, existingPoll: poll) { updatedPoll in
+                        if let i = polls.firstIndex(where: { $0.id == updatedPoll.id }) {
+                            polls[i] = updatedPoll
+                        }
+                        pollForEdit = nil
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(AuthTheme.background)
+                    .navigationTitle("Edit Poll")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbarBackground(AuthTheme.background, for: .navigationBar)
+                    .toolbarColorScheme(.dark, for: .navigationBar)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("< Back") {
+                                pollForEdit = nil
+                            }
+                            .foregroundStyle(AuthTheme.accent)
+                        }
+                    }
+                }
+            }
+            .alert("Delete poll?", isPresented: .init(
+                get: { pollToDeleteForConfirmation != nil },
+                set: { if !$0 { pollToDeleteForConfirmation = nil } }
+            )) {
+                Button("Cancel", role: .cancel) {
+                    pollToDeleteForConfirmation = nil
+                }
+                Button("Delete", role: .destructive) {
+                    confirmDeletePoll()
+                }
+            } message: {
+                if pollToDeleteForConfirmation != nil {
+                    Text("This poll will be permanently deleted.")
+                }
+            }
+        }
+    }
+
+    private func confirmDeletePoll() {
+        guard let poll = pollToDeleteForConfirmation else { return }
+        let pollId = poll.id
+        pollToDeleteForConfirmation = nil
+        if pollForMoreDetails?.id == pollId {
+            pollForMoreDetails = nil
+        }
+        Task {
+            do {
+                try await authState.deletePoll(pollId: pollId)
+                await MainActor.run {
+                    polls.removeAll { $0.id == pollId }
+                }
+            } catch {
+                await MainActor.run {
+                    // Could set an error state to show alert; for now leave list unchanged
+                }
+            }
+        }
+    }
+
+    private func isOwnPoll(_ poll: Poll) -> Bool {
+        guard let uid = authState.currentUser?.id else { return false }
+        return poll.createdBy == uid
+    }
+
+    @ViewBuilder
+    private func pollOwnerActionsSheet(poll: Poll) -> some View {
+        VStack(spacing: 0) {
+            Text("Poll options")
+                .font(.subheadline)
+                .foregroundStyle(AuthTheme.secondary)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 20)
+                .padding(.bottom, 12)
+
+            VStack(spacing: 0) {
+                ownerActionRow(icon: "doc.text", title: "More details", showDivider: true) {
+                    pollForOwnerSheet = nil
+                    withAnimation(.easeOut(duration: 0.28)) {
+                        pollForMoreDetails = poll
+                    }
+                }
+                ownerActionRow(icon: "pencil", title: "Edit poll", showDivider: true) {
+                    pollForOwnerSheet = nil
+                    pollForEdit = poll
+                }
+                ownerActionRow(icon: "trash", title: "Delete poll", isDestructive: true, showDivider: false) {
+                    pollForOwnerSheet = nil
+                    pollToDeleteForConfirmation = poll
+                }
+            }
+            .background(AuthTheme.primary.opacity(0.06))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(AuthTheme.primary.opacity(0.12), lineWidth: 1)
+            )
+            .padding(.horizontal, 20)
+            .padding(.bottom, 24)
+        }
+        .frame(maxWidth: .infinity)
+        .background(AuthTheme.background)
+        .presentationDetents([.height(220)])
+        .presentationDragIndicator(.visible)
+    }
+
+    private func ownerActionRow(icon: String, title: String, isDestructive: Bool = false, showDivider: Bool = true, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(isDestructive ? Color.red.opacity(0.9) : AuthTheme.accent)
+                    .frame(width: 28, height: 28)
+                Text(title)
+                    .font(.body)
+                    .foregroundStyle(isDestructive ? Color.red : AuthTheme.primary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AuthTheme.secondary.opacity(0.8))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
+        .buttonStyle(.plain)
+        .overlay(alignment: .bottom) {
+            if showDivider {
+                Rectangle()
+                    .fill(AuthTheme.primary.opacity(0.08))
+                    .frame(height: 1)
+                    .padding(.leading, 56)
+            }
         }
     }
 
@@ -118,9 +259,13 @@ struct PollsView: View {
                             .zIndex(0)
                     }
 
-                    PollCardView(poll: $polls[0], onShowMoreDetails: {
-                        withAnimation(.easeOut(duration: 0.28)) {
-                            pollForMoreDetails = polls[0]
+                    PollCardView(poll: $polls[0], onEllipsisTapped: { poll in
+                        if isOwnPoll(poll) {
+                            pollForOwnerSheet = poll
+                        } else {
+                            withAnimation(.easeOut(duration: 0.28)) {
+                                pollForMoreDetails = poll
+                            }
                         }
                     })
                         .frame(maxWidth: .infinity, maxHeight: .infinity)

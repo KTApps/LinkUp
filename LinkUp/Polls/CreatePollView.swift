@@ -10,6 +10,7 @@ import UniformTypeIdentifiers
 
 struct CreatePollView: View {
     @ObservedObject var authState: AuthState
+    var existingPoll: Poll? = nil
     var onCreated: (Poll) -> Void
     @Environment(\.dismiss) private var dismiss
 
@@ -20,6 +21,7 @@ struct CreatePollView: View {
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isSubmitting = false
     @State private var errorMessage: String?
+    @State private var didPrefill = false
 
     private let minOptions = 2
 
@@ -44,12 +46,26 @@ struct CreatePollView: View {
                         .padding(.horizontal)
                 }
 
-                createButton
+                submitButton
             }
             .padding(.vertical, 20)
         }
         .background(AuthTheme.background)
+        .onAppear {
+            if let existing = existingPoll, !didPrefill {
+                question = existing.question
+                optionTexts = existing.options.map(\.text)
+                if optionTexts.count < minOptions {
+                    optionTexts.append(contentsOf: (0..<(minOptions - optionTexts.count)).map { _ in "" })
+                }
+                activityDate = existing.activityDate ?? Date()
+                activityDescription = existing.activityDescription ?? ""
+                didPrefill = true
+            }
+        }
     }
+
+    private var isEditMode: Bool { existingPoll != nil }
 
     private var optionsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -178,7 +194,7 @@ struct CreatePollView: View {
         }
     }
 
-    private var createButton: some View {
+    private var submitButton: some View {
         Button {
             submit()
         } label: {
@@ -187,7 +203,7 @@ struct CreatePollView: View {
                     ProgressView()
                         .tint(AuthTheme.background)
                 } else {
-                    Text("Create Poll")
+                    Text(isEditMode ? "Edit Poll" : "Create Poll")
                         .font(Typography.subheadlineSemibold)
                 }
             }
@@ -224,13 +240,25 @@ struct CreatePollView: View {
                         imageData = loaded.data
                     }
                 }
-                let poll = try await authState.createPoll(
-                    question: trimmedQuestion,
-                    optionTexts: trimmedOptions,
-                    activityDate: activityDate,
-                    activityDescription: activityDescription.isEmpty ? nil : activityDescription,
-                    imageData: imageData
-                )
+                let poll: Poll
+                if let existing = existingPoll {
+                    poll = try await authState.updatePoll(
+                        existingPoll: existing,
+                        question: trimmedQuestion,
+                        optionTexts: trimmedOptions,
+                        activityDate: activityDate,
+                        activityDescription: activityDescription.isEmpty ? nil : activityDescription,
+                        imageData: imageData
+                    )
+                } else {
+                    poll = try await authState.createPoll(
+                        question: trimmedQuestion,
+                        optionTexts: trimmedOptions,
+                        activityDate: activityDate,
+                        activityDescription: activityDescription.isEmpty ? nil : activityDescription,
+                        imageData: imageData
+                    )
+                }
                 await MainActor.run {
                     isSubmitting = false
                     onCreated(poll)
