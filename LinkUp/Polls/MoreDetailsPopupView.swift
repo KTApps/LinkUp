@@ -10,20 +10,6 @@ private let imageMaxHeight: CGFloat = 160
 private let popupMaxWidth: CGFloat = 340
 private let popupMaxHeight: CGFloat = 520
 
-private let timeFormatter: DateFormatter = {
-    let f = DateFormatter()
-    f.timeStyle = .short
-    f.dateStyle = .none
-    return f
-}()
-
-private let dateFormatter: DateFormatter = {
-    let f = DateFormatter()
-    f.dateFormat = "dd/MM/yyyy"
-    f.timeStyle = .none
-    return f
-}()
-
 /// Centered popup content for "More Details": question, date/time, optional image, description. X to close.
 struct MoreDetailsPopupView: View {
     let poll: Poll
@@ -80,9 +66,13 @@ struct MoreDetailsPopupView: View {
                     .foregroundStyle(AuthTheme.primary)
                     .multilineTextAlignment(.leading)
                 if let date = poll.activityDate {
-                    Text("\(timeFormatter.string(from: date)) · \(dateFormatter.string(from: date))")
-                        .font(Typography.subheadline)
-                        .foregroundStyle(AuthTheme.secondary)
+                    HStack(spacing: 4) {
+                        Text(date, format: .dateTime.hour().minute())
+                        Text("·")
+                        Text(date, format: .dateTime.day().month().year())
+                    }
+                    .font(Typography.subheadline)
+                    .foregroundStyle(AuthTheme.secondary)
                 } else {
                     Text("No date set")
                         .font(Typography.subheadline)
