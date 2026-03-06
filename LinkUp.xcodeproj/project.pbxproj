@@ -31,6 +31,8 @@
 		086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0C2F472900007E69CC /* CreatePollView.swift */; };
 		086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */; };
 		086A7A122F472900007E69CC /* PollHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A112F472900007E69CC /* PollHistoryView.swift */; };
+		086A7A142F472900007E69CC /* PollResultsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A132F472900007E69CC /* PollResultsChartView.swift */; };
+		086A7A162F472900007E69CC /* PollOptionVotersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A152F472900007E69CC /* PollOptionVotersView.swift */; };
 		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
 		086A7B132F472900007E69CC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B122F472900007E69CC /* CalendarView.swift */; };
 		086A7B202F472900007E69CC /* FriendModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B1E2F472900007E69CC /* FriendModels.swift */; };
@@ -98,6 +100,8 @@
 		086A7A0C2F472900007E69CC /* CreatePollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollView.swift; sourceTree = "<group>"; };
 		086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDetailsPopupView.swift; sourceTree = "<group>"; };
 		086A7A112F472900007E69CC /* PollHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollHistoryView.swift; sourceTree = "<group>"; };
+		086A7A132F472900007E69CC /* PollResultsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollResultsChartView.swift; sourceTree = "<group>"; };
+		086A7A152F472900007E69CC /* PollOptionVotersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollOptionVotersView.swift; sourceTree = "<group>"; };
 		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		086A7B122F472900007E69CC /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		086A7B1E2F472900007E69CC /* FriendModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModels.swift; sourceTree = "<group>"; };
@@ -216,6 +220,8 @@
 				086A7A0C2F472900007E69CC /* CreatePollView.swift */,
 				086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */,
 				086A7A112F472900007E69CC /* PollHistoryView.swift */,
+				086A7A132F472900007E69CC /* PollResultsChartView.swift */,
+				086A7A152F472900007E69CC /* PollOptionVotersView.swift */,
 			);
 			path = Polls;
 			sourceTree = "<group>";
@@ -426,6 +432,8 @@
 				086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */,
 				086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */,
 				086A7A122F472900007E69CC /* PollHistoryView.swift in Sources */,
+				086A7A142F472900007E69CC /* PollResultsChartView.swift in Sources */,
+				086A7A162F472900007E69CC /* PollOptionVotersView.swift in Sources */,
 				086A7A092F472900007E69CC /* SettingsView.swift in Sources */,
 				086A7B132F472900007E69CC /* CalendarView.swift in Sources */,
 				086A7B202F472900007E69CC /* FriendModels.swift in Sources */,

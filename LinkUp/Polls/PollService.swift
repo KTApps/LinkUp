@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 import FirebaseFirestore
+import FirebaseFirestoreSwift
 import FirebaseStorage
 
 /// Firestore document shape for a poll (includes metadata not on the in-app Poll model).
@@ -133,13 +134,72 @@ extension AuthState {
         let imageRef = storageRef.child("activity_images/\(pollId).jpg")
         try? await imageRef.delete()
     }
+
+    /// Submits a vote: updates poll option counts and stores response. Requires current user (uid + username).
+    /// Decrements previous option if any; increments new option. Use batch for atomicity.
+    func submitVote(pollId: String, optionId: String, previousOptionId: String?) async throws -> Poll {
+        guard let uid = authRef.currentUser?.uid,
+              let username = currentUser?.username else {
+            throw PollServiceError.notAuthenticated
+        }
+        let pollRef = databaseRef.collection("polls").document(pollId)
+        let responseRef = pollRef.collection("responses").document(uid)
+
+        let snapshot = try await pollRef.getDocument()
+        guard snapshot.exists, let data = snapshot.data() else { throw PollServiceError.pollNotFound }
+        let poll = try snapshot.data(as: Poll.self)
+
+        var options = poll.options
+        if let prevId = previousOptionId, let prevIdx = options.firstIndex(where: { $0.id == prevId }), options[prevIdx].count > 0 {
+            options[prevIdx].count -= 1
+        }
+        if let newIdx = options.firstIndex(where: { $0.id == optionId }) {
+            options[newIdx].count += 1
+        }
+
+        let updatedPoll = Poll(
+            id: poll.id,
+            question: poll.question,
+            options: options,
+            activityDate: poll.activityDate,
+            activityDescription: poll.activityDescription,
+            imageURL: poll.imageURL,
+            createdBy: poll.createdBy
+        )
+        let encodedOptions = try Firestore.Encoder().encode(options)
+
+        let batch = databaseRef.batch()
+        batch.updateData(["options": encodedOptions], forDocument: pollRef)
+        batch.setData(["optionId": optionId, "username": username], forDocument: responseRef)
+
+        try await batch.commit()
+        return updatedPoll
+    }
+
+    /// Fetches usernames of users who voted for the given option. Query responses subcollection.
+    func fetchVoters(pollId: String, optionId: String) async throws -> [PollVoter] {
+        guard authRef.currentUser != nil else {
+            throw PollServiceError.notAuthenticated
+        }
+        let snapshot = try await databaseRef.collection("polls").document(pollId)
+            .collection("responses")
+            .whereField("optionId", isEqualTo: optionId)
+            .getDocuments()
+        return snapshot.documents.compactMap { doc in
+            let uid = doc.documentID
+            let username = doc.data()["username"] as? String ?? "?"
+            return PollVoter(id: uid, username: username)
+        }
+    }
 }
 
 enum PollServiceError: LocalizedError {
     case notAuthenticated
+    case pollNotFound
     var errorDescription: String? {
         switch self {
         case .notAuthenticated: return "You must be signed in to create a poll."
+        case .pollNotFound: return "Poll not found."
         }
     }
 }

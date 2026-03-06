@@ -6,11 +6,17 @@
 import SwiftUI
 
 /// History page: list of all polls as "Title - N votes" with bar chart icon per row. Pushed when user taps bar chart in Polls header. Title "History"; settings icon opens Settings sheet.
+private struct ChartSheetItem: Identifiable {
+    let poll: Poll
+    var id: String { poll.id }
+}
+
 struct PollHistoryView: View {
     @ObservedObject var authState: AuthState
     let polls: [Poll]
     @Environment(\.dismiss) private var dismiss
     @State private var showSettings = false
+    @State private var pollForChart: ChartSheetItem?
 
     var body: some View {
         Group {
@@ -62,6 +68,11 @@ struct PollHistoryView: View {
                     }
             }
         }
+        .sheet(item: $pollForChart) { item in
+            PollResultsChartView(poll: item.poll, authState: authState)
+                .presentationDetents([.fraction(0.5)])
+                .presentationDragIndicator(.visible)
+        }
     }
 
     private var emptyView: some View {
@@ -84,7 +95,7 @@ struct PollHistoryView: View {
     private func historyRow(poll: Poll) -> some View {
         HStack(spacing: 12) {
             Button {
-                // Placeholder: view detail later
+                pollForChart = ChartSheetItem(poll: poll)
             } label: {
                 Image(systemName: "chart.bar.fill")
                     .font(.system(size: 20))

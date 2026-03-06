@@ -126,6 +126,21 @@ struct PollsView: View {
         return poll.createdBy == uid
     }
 
+    private func handleVote(pollId: String, optionId: String, previousOptionId: String?) {
+        Task {
+            do {
+                let updated = try await authState.submitVote(pollId: pollId, optionId: optionId, previousOptionId: previousOptionId)
+                await MainActor.run {
+                    if let i = polls.firstIndex(where: { $0.id == pollId }) {
+                        polls[i] = updated
+                    }
+                }
+            } catch {
+                // Keep local state; poll may not exist in Firestore (e.g. hardcoded)
+            }
+        }
+    }
+
     @ViewBuilder
     private func pollOwnerActionsSheet(poll: Poll) -> some View {
         VStack(spacing: 0) {
@@ -239,7 +254,7 @@ struct PollsView: View {
 
                 ZStack(alignment: .top) {
                     if polls.count > 1 {
-                        PollCardView(poll: $polls[1])
+                        PollCardView(poll: $polls[1], onVote: handleVote)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -249,7 +264,7 @@ struct PollsView: View {
                             .zIndex(0)
                     }
                     if polls.count > 1 {
-                        PollCardView(poll: $polls[polls.count - 1])
+                        PollCardView(poll: $polls[polls.count - 1], onVote: handleVote)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -267,7 +282,7 @@ struct PollsView: View {
                                 pollForMoreDetails = poll
                             }
                         }
-                    })
+                    }, onVote: handleVote)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, deckHorizontalPadding)
                         .padding(.top, contentTop)

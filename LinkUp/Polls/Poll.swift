@@ -6,10 +6,16 @@
 import Foundation
 
 /// A single choice in a poll. Count is number of votes for this option.
-struct PollOption: Identifiable, Codable {
+struct PollOption: Identifiable, Codable, Hashable {
     let id: String
     let text: String
     var count: Int
+}
+
+/// Voter for drill-through: who voted for an option.
+struct PollVoter: Identifiable {
+    let id: String
+    let username: String
 }
 
 /// A poll: question and options. Total vote count is derived from sum of option counts.

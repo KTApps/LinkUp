@@ -14,6 +14,7 @@ private let tapAnimation = Animation.easeOut(duration: 0.15)
 struct PollCardView: View {
     @Binding var poll: Poll
     var onEllipsisTapped: ((Poll) -> Void)? = nil
+    var onVote: ((_ pollId: String, _ optionId: String, _ previousOptionId: String?) -> Void)? = nil
     @State private var selectedOptionId: String?
 
     private var total: Int { poll.totalVoteCount }
@@ -96,8 +97,9 @@ struct PollCardView: View {
 
         return Button {
             if selectedOptionId == option.id { return }
-            if let previousId = selectedOptionId,
-               let previousIndex = poll.options.firstIndex(where: { $0.id == previousId }) {
+            let previousId = selectedOptionId
+            if let prevId = previousId,
+               let previousIndex = poll.options.firstIndex(where: { $0.id == prevId }) {
                 var updated = poll
                 if updated.options[previousIndex].count > 0 {
                     updated.options[previousIndex].count -= 1
@@ -110,6 +112,7 @@ struct PollCardView: View {
                 updated.options[index].count += 1
                 poll = updated
             }
+            onVote?(poll.id, option.id, previousId)
         } label: {
             HStack(spacing: 6) {
                 Text(option.text)
