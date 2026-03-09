@@ -92,6 +92,19 @@ extension AuthState {
         ])
     }
 
+    // MARK: - Fetch group conversations
+
+    /// Fetches group conversations the user is in (for poll share picker).
+    func fetchMyGroupConversations(uid: String) async throws -> [Conversation] {
+        let snapshot = try await databaseRef.collection("conversations")
+            .whereField("participantIds", arrayContains: uid)
+            .getDocuments()
+        return snapshot.documents.compactMap { doc in
+            guard let conv = try? doc.data(as: Conversation.self), conv.type == .group else { return nil }
+            return conv
+        }
+    }
+
     // MARK: - Listeners
 
     /// Real-time listener for conversations where the user is a participant. Call remove() on return value to stop.

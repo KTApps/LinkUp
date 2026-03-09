@@ -10,9 +10,11 @@ private let progressAnimation = Animation.easeOut(duration: 0.35)
 private let tapAnimation = Animation.easeOut(duration: 0.15)
 
 /// Single poll card: question, vote count, selectable options, progress bar.
-/// Uses AuthTheme; voting updates in-memory state only. Rich motion and clear selected state.
+/// Uses AuthTheme. Pass myVoteOptionId so the user's saved vote is highlighted (e.g. after re-login).
 struct PollCardView: View {
     @Binding var poll: Poll
+    /// Current user's saved vote (optionId) from Firestore; shown highlighted in cyan.
+    var myVoteOptionId: String? = nil
     var onEllipsisTapped: ((Poll) -> Void)? = nil
     var onVote: ((_ pollId: String, _ optionId: String, _ previousOptionId: String?) -> Void)? = nil
     @State private var selectedOptionId: String?
@@ -62,6 +64,22 @@ struct PollCardView: View {
                 }
                 .buttonStyle(.plain)
                 .padding(8)
+            }
+        }
+        .onAppear {
+            if selectedOptionId == nil, let saved = myVoteOptionId, poll.options.contains(where: { $0.id == saved }) {
+                selectedOptionId = saved
+            }
+        }
+        .onChange(of: poll.id) { _, _ in
+            // Card was reused for a different poll (e.g. after swipe); show that poll's vote only.
+            selectedOptionId = myVoteOptionId
+        }
+        .onChange(of: myVoteOptionId) { _, newValue in
+            if let saved = newValue, poll.options.contains(where: { $0.id == saved }) {
+                selectedOptionId = saved
+            } else {
+                selectedOptionId = newValue
             }
         }
     }

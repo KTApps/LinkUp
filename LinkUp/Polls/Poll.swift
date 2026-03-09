@@ -30,6 +30,8 @@ struct Poll: Identifiable, Codable {
     var imageURL: String?
     /// UID of the user who created the poll; nil for legacy/hardcoded data.
     var createdBy: String? = nil
+    /// UIDs who can see this poll (includes createdBy). Empty for legacy/hardcoded data.
+    var visibleToUids: [String] = []
 
     var totalVoteCount: Int {
         options.reduce(0) { $0 + $1.count }
@@ -49,7 +51,8 @@ enum HardcodedPolls {
             ],
             activityDate: nil,
             activityDescription: nil,
-            imageURL: nil
+            imageURL: nil,
+            visibleToUids: []
         ),
         Poll(
             id: "poll-2",
@@ -60,7 +63,8 @@ enum HardcodedPolls {
             ],
             activityDate: nil,
             activityDescription: nil,
-            imageURL: nil
+            imageURL: nil,
+            visibleToUids: []
         ),
         Poll(
             id: "poll-3",
@@ -71,7 +75,8 @@ enum HardcodedPolls {
             ],
             activityDate: nil,
             activityDescription: nil,
-            imageURL: nil
+            imageURL: nil,
+            visibleToUids: []
         )
     ]
 }

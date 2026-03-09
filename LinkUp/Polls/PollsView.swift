@@ -34,6 +34,8 @@ struct PollsView: View {
     @State private var pollForOwnerSheet: Poll?
     @State private var pollForEdit: Poll?
     @State private var pollToDeleteForConfirmation: Poll?
+    /// Current user's vote per poll: pollId -> optionId (so we can show it highlighted).
+    @State private var myVotes: [String: String] = [:]
 
     var body: some View {
         GeometryReader { geometry in
@@ -55,6 +57,9 @@ struct PollsView: View {
                 }
             }
             .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
+            .task(id: polls.map(\.id)) {
+                await loadMyVotes()
+            }
             .sheet(item: $pollForOwnerSheet) { poll in
                 pollOwnerActionsSheet(poll: poll)
             }
@@ -126,6 +131,19 @@ struct PollsView: View {
         return poll.createdBy == uid
     }
 
+    private func loadMyVotes() async {
+        guard authState.authRef.currentUser != nil else { return }
+        var votes: [String: String] = [:]
+        for poll in polls {
+            if let optionId = try? await authState.fetchMyVote(pollId: poll.id) {
+                votes[poll.id] = optionId
+            }
+        }
+        await MainActor.run {
+            myVotes = votes
+        }
+    }
+
     private func handleVote(pollId: String, optionId: String, previousOptionId: String?) {
         Task {
             do {
@@ -134,6 +152,7 @@ struct PollsView: View {
                     if let i = polls.firstIndex(where: { $0.id == pollId }) {
                         polls[i] = updated
                     }
+                    myVotes[pollId] = optionId
                 }
             } catch {
                 // Keep local state; poll may not exist in Firestore (e.g. hardcoded)
@@ -254,7 +273,7 @@ struct PollsView: View {
 
                 ZStack(alignment: .top) {
                     if polls.count > 1 {
-                        PollCardView(poll: $polls[1], onVote: handleVote)
+                        PollCardView(poll: $polls[1], myVoteOptionId: myVotes[polls[1].id], onVote: handleVote)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -264,7 +283,7 @@ struct PollsView: View {
                             .zIndex(0)
                     }
                     if polls.count > 1 {
-                        PollCardView(poll: $polls[polls.count - 1], onVote: handleVote)
+                        PollCardView(poll: $polls[polls.count - 1], myVoteOptionId: myVotes[polls[polls.count - 1].id], onVote: handleVote)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -274,7 +293,7 @@ struct PollsView: View {
                             .zIndex(0)
                     }
 
-                    PollCardView(poll: $polls[0], onEllipsisTapped: { poll in
+                    PollCardView(poll: $polls[0], myVoteOptionId: myVotes[polls[0].id], onEllipsisTapped: { poll in
                         if isOwnPoll(poll) {
                             pollForOwnerSheet = poll
                         } else {

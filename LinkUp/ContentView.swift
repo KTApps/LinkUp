@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 /// Route for pushed pages (not sheets). Bar chart opens History.
 private enum AppRoute: Hashable {
@@ -15,9 +17,10 @@ private enum AppRoute: Hashable {
 /// Main app view when the user is logged in. Polls is the root; Messages, Plus, and Calendar open as sheets (back button or swipe down to return).
 struct ContentView: View {
     @ObservedObject var authState: AuthState
-    @State private var polls: [Poll] = HardcodedPolls.sample
+    @State private var polls: [Poll] = []
     @State private var presentedSheet: AppSheet?
     @State private var navigationPath: [AppRoute] = []
+    @State private var pollsListener: ListenerRegistration?
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -41,6 +44,34 @@ struct ContentView: View {
         }
         .sheet(item: $presentedSheet) { sheet in
             sheetContent(for: sheet)
+        }
+        .onAppear {
+            // Use Firebase Auth UID so the listener attaches as soon as the user is signed in,
+            // without waiting for the Firestore profile (currentUser) to load.
+            guard let uid = authState.authRef.currentUser?.uid else { return }
+            pollsListener = authState.addPollsListener(uid: uid) { newPolls in
+                Task { @MainActor in
+                    // Preserve current deck order (from user swiping); only update poll data from server.
+                    // Deduplicate by id (first occurrence wins) so the same poll never appears twice in the stack.
+                    let currentIds = polls.map(\.id)
+                    let newById = Dictionary(uniqueKeysWithValues: newPolls.map { ($0.id, $0) })
+                    var merged: [Poll] = []
+                    var seenIds: Set<String> = []
+                    for id in currentIds {
+                        guard !seenIds.contains(id), let poll = newById[id] else { continue }
+                        seenIds.insert(id)
+                        merged.append(poll)
+                    }
+                    for p in newPolls where !seenIds.contains(p.id) {
+                        merged.append(p)
+                    }
+                    polls = merged
+                }
+            }
+        }
+        .onDisappear {
+            pollsListener?.remove()
+            pollsListener = nil
         }
     }
 

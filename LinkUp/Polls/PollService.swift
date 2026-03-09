@@ -19,18 +19,20 @@ private struct PollDocument: Encodable {
     let imageURL: String?
     let createdBy: String
     let createdAt: Date
+    let visibleToUids: [String]
 }
 
 extension AuthState {
 
     /// Creates a poll: uploads image to Storage if provided, writes document to Firestore, returns the created Poll.
-    /// Options are built from option texts with generated ids and count 0.
+    /// Options are built from option texts with generated ids and count 0. visibleToUids must include createdBy.
     func createPoll(
         question: String,
         optionTexts: [String],
         activityDate: Date?,
         activityDescription: String?,
-        imageData: Data?
+        imageData: Data?,
+        visibleToUids: [String]
     ) async throws -> Poll {
         guard let uid = authRef.currentUser?.uid else {
             throw PollServiceError.notAuthenticated
@@ -46,6 +48,7 @@ extension AuthState {
         let options: [PollOption] = optionTexts.enumerated().map { index, text in
             PollOption(id: "opt-\(index)", text: text, count: 0)
         }
+        let allVisible = visibleToUids.contains(uid) ? visibleToUids : [uid] + visibleToUids
         let poll = Poll(
             id: pollId,
             question: question,
@@ -53,7 +56,8 @@ extension AuthState {
             activityDate: activityDate,
             activityDescription: activityDescription,
             imageURL: imageURL,
-            createdBy: uid
+            createdBy: uid,
+            visibleToUids: allVisible
         )
         let doc = PollDocument(
             id: poll.id,
@@ -63,7 +67,8 @@ extension AuthState {
             activityDescription: poll.activityDescription,
             imageURL: poll.imageURL,
             createdBy: uid,
-            createdAt: Date()
+            createdAt: Date(),
+            visibleToUids: allVisible
         )
         let encoded = try Firestore.Encoder().encode(doc)
         try await databaseRef.collection("polls").document(pollId).setData(encoded)
@@ -78,7 +83,8 @@ extension AuthState {
         optionTexts: [String],
         activityDate: Date?,
         activityDescription: String?,
-        imageData: Data?
+        imageData: Data?,
+        visibleToUids: [String]
     ) async throws -> Poll {
         guard let uid = authRef.currentUser?.uid else {
             throw PollServiceError.notAuthenticated
@@ -100,6 +106,7 @@ extension AuthState {
             let optionId = index < existingOptions.count ? existingOptions[index].id : "opt-\(index)"
             return PollOption(id: optionId, text: text, count: existingCount)
         }
+        let allVisible = visibleToUids.contains(uid) ? visibleToUids : [uid] + visibleToUids
         let updatedPoll = Poll(
             id: pollId,
             question: question,
@@ -107,7 +114,8 @@ extension AuthState {
             activityDate: activityDate,
             activityDescription: activityDescription,
             imageURL: imageURL,
-            createdBy: existingPoll.createdBy
+            createdBy: existingPoll.createdBy,
+            visibleToUids: allVisible
         )
         let doc = PollDocument(
             id: updatedPoll.id,
@@ -117,7 +125,8 @@ extension AuthState {
             activityDescription: updatedPoll.activityDescription,
             imageURL: updatedPoll.imageURL,
             createdBy: uid,
-            createdAt: Date()
+            createdAt: Date(),
+            visibleToUids: allVisible
         )
         let encoded = try Firestore.Encoder().encode(doc)
         try await databaseRef.collection("polls").document(pollId).setData(encoded)
@@ -164,16 +173,29 @@ extension AuthState {
             activityDate: poll.activityDate,
             activityDescription: poll.activityDescription,
             imageURL: poll.imageURL,
-            createdBy: poll.createdBy
+            createdBy: poll.createdBy,
+            visibleToUids: poll.visibleToUids
         )
-        let encodedOptions = try Firestore.Encoder().encode(options)
+        // Build options as plain maps so Firestore stores them in a form that decodes correctly for all clients.
+        let optionsData: [[String: Any]] = options.map { opt in
+            ["id": opt.id, "text": opt.text, "count": opt.count]
+        }
 
         let batch = databaseRef.batch()
-        batch.updateData(["options": encodedOptions], forDocument: pollRef)
+        batch.updateData(["options": optionsData], forDocument: pollRef)
         batch.setData(["optionId": optionId, "username": username], forDocument: responseRef)
 
         try await batch.commit()
         return updatedPoll
+    }
+
+    /// Fetches the current user's vote for a poll (optionId if they voted). Returns nil if they haven't voted.
+    func fetchMyVote(pollId: String) async throws -> String? {
+        guard let uid = authRef.currentUser?.uid else { return nil }
+        let ref = databaseRef.collection("polls").document(pollId).collection("responses").document(uid)
+        let snapshot = try await ref.getDocument()
+        guard snapshot.exists, let data = snapshot.data() else { return nil }
+        return data["optionId"] as? String
     }
 
     /// Fetches usernames of users who voted for the given option. Query responses subcollection.
@@ -190,6 +212,34 @@ extension AuthState {
             let username = doc.data()["username"] as? String ?? "?"
             return PollVoter(id: uid, username: username)
         }
+    }
+
+    /// Fetches polls visible to the user (visibleToUids contains uid), ordered by createdAt descending.
+    func fetchPolls(uid: String) async throws -> [Poll] {
+        guard authRef.currentUser != nil else {
+            throw PollServiceError.notAuthenticated
+        }
+        let snapshot = try await databaseRef.collection("polls")
+            .whereField("visibleToUids", arrayContains: uid)
+            .order(by: "createdAt", descending: true)
+            .getDocuments()
+        return snapshot.documents.compactMap { doc in
+            try? doc.data(as: Poll.self)
+        }
+    }
+
+    /// Real-time listener for polls visible to the user. Call remove() on the return value to stop.
+    func addPollsListener(uid: String, onUpdate: @escaping ([Poll]) -> Void) -> ListenerRegistration {
+        databaseRef.collection("polls")
+            .whereField("visibleToUids", arrayContains: uid)
+            .order(by: "createdAt", descending: true)
+            .addSnapshotListener { snapshot, error in
+                guard let snapshot = snapshot else { return }
+                let polls = snapshot.documents.compactMap { doc -> Poll? in
+                    try? doc.data(as: Poll.self)
+                }
+                onUpdate(polls)
+            }
     }
 }
 

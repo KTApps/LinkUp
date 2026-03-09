@@ -27,11 +27,11 @@ service cloud.firestore {
       allow update: if request.auth != null && resource.data.toUid == request.auth.uid;
       allow delete: if false;
     }
-    // Polls: any signed-in user can create/read; anyone signed in can update (e.g. for voting); only creator can delete.
+    // Polls: visible only to uids in visibleToUids; any signed-in user can create; only viewers (in visibleToUids) can update (vote); only creator can delete.
     match /polls/{pollId} {
-      allow read: if request.auth != null;
+      allow read: if request.auth != null && request.auth.uid in resource.data.visibleToUids;
       allow create: if request.auth != null;
-      allow update: if request.auth != null;
+      allow update: if request.auth != null && request.auth.uid in resource.data.visibleToUids;
       allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
       // Responses: who voted for which option. Any signed-in user can read; users write only their own.
       match /responses/{userId} {
