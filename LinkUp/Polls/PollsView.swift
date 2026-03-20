@@ -438,6 +438,15 @@ struct PollsView: View {
         .padding()
     }
 
+    /// Wordmark asset (Link white / Up cyan) beside username, before chart/settings.
+    private var linkUpHeaderLogo: some View {
+        Image("LinkUpLogo")
+            .resizable()
+            .scaledToFit()
+            .frame(height: 20)
+            .accessibilityLabel("LinkUp")
+    }
+
     private func pollsHeader(safeAreaTop: CGFloat) -> some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
@@ -446,6 +455,8 @@ struct PollsView: View {
                 Text(authState.currentUser?.username ?? "username")
                     .font(.subheadline)
                     .foregroundStyle(AuthTheme.primary)
+
+                linkUpHeaderLogo
 
                 Spacer()
 

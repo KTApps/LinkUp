@@ -8,7 +8,6 @@ import SwiftUI
 private let progressBarHeight: CGFloat = 7
 private let progressAnimation = Animation.easeOut(duration: 0.35)
 private let tapAnimation = Animation.easeOut(duration: 0.15)
-
 /// Single poll card: question, vote count, selectable options, progress bar.
 /// Uses AuthTheme. Pass myVoteOptionId so the user's saved vote is highlighted (e.g. after re-login).
 struct PollCardView: View {
@@ -24,36 +23,37 @@ struct PollCardView: View {
     private var total: Int { poll.totalVoteCount }
 
     var body: some View {
-        GeometryReader { geometry in
-            let titleY = geometry.size.height * 0.22
-            let centerY = geometry.size.height * 0.5
+        ZStack(alignment: .topTrailing) {
+            GeometryReader { geometry in
+                let titleY = geometry.size.height * 0.22
+                let centerY = geometry.size.height * 0.5
 
-            ZStack(alignment: .top) {
-                titleBlock
-                    .frame(maxWidth: .infinity)
-                    .position(x: geometry.size.width / 2, y: titleY)
+                ZStack(alignment: .top) {
+                    titleBlock
+                        .frame(maxWidth: .infinity)
+                        .position(x: geometry.size.width / 2, y: titleY)
 
-                VStack(spacing: 12) {
-                    optionsView
-                    confirmButton
-                    progressBarView
-                    if total > 0 {
-                        percentagesCaption
+                    VStack(spacing: 12) {
+                        optionsView
+                        confirmButton
+                        progressBarView
+                        if total > 0 {
+                            percentagesCaption
+                        }
                     }
+                    .frame(maxWidth: .infinity)
+                    .position(x: geometry.size.width / 2, y: centerY)
                 }
-                .frame(maxWidth: .infinity)
-                .position(x: geometry.size.width / 2, y: centerY)
             }
-        }
-        .padding()
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AuthTheme.primary.opacity(0.08))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .strokeBorder(AuthTheme.primary.opacity(0.08), lineWidth: 1)
-        )
-        .overlay(alignment: .topTrailing) {
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AuthTheme.primary.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(AuthTheme.primary.opacity(0.08), lineWidth: 1)
+            )
+
             if onEllipsisTapped != nil {
                 Button {
                     onEllipsisTapped?(poll)
@@ -69,13 +69,13 @@ struct PollCardView: View {
                 .padding(8)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             if selectedOptionId == nil, let saved = myVoteOptionId, poll.options.contains(where: { $0.id == saved }) {
                 selectedOptionId = saved
             }
         }
         .onChange(of: poll.id) { _, _ in
-            // Card was reused for a different poll (e.g. after swipe); show that poll's vote only.
             selectedOptionId = myVoteOptionId
         }
         .onChange(of: myVoteOptionId) { _, newValue in
