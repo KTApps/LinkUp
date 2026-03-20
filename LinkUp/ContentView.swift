@@ -21,12 +21,14 @@ struct ContentView: View {
     @State private var presentedSheet: AppSheet?
     @State private var navigationPath: [AppRoute] = []
     @State private var pollsListener: ListenerRegistration?
+    @State private var confirmedPollIds: Set<String> = []
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
             PollsView(
                 authState: authState,
                 polls: $polls,
+                confirmedPollIds: $confirmedPollIds,
                 onOpenSettings: { presentedSheet = .settings },
                 onOpenPollHistory: { navigationPath.append(.history) }
             )
@@ -122,7 +124,7 @@ struct ContentView: View {
             }
         case .calendar:
             SheetHost(title: "Calendar") {
-                CalendarView()
+                CalendarView(authState: authState, confirmedPollIds: $confirmedPollIds)
             }
         case .settings:
             SheetHost(title: "Settings") {

@@ -13,6 +13,8 @@ private let popupMaxHeight: CGFloat = 520
 /// Centered popup content for "More Details": question, date/time, optional image, description. X to close.
 struct MoreDetailsPopupView: View {
     let poll: Poll
+    var showUnconfirmButton: Bool = false
+    var onUnconfirm: (() -> Void)? = nil
     var onClose: () -> Void
 
     var body: some View {
@@ -45,6 +47,20 @@ struct MoreDetailsPopupView: View {
                     }
 
                     descriptionSection
+                    if showUnconfirmButton {
+                        Button {
+                            onUnconfirm?()
+                        } label: {
+                            Text("Unconfirm")
+                                .font(Typography.subheadlineSemibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 12)
+                                .background(AuthTheme.accent)
+                                .foregroundStyle(AuthTheme.background)
+                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
                 .padding(20)
             }

@@ -17,6 +17,8 @@ struct PollCardView: View {
     var myVoteOptionId: String? = nil
     var onEllipsisTapped: ((Poll) -> Void)? = nil
     var onVote: ((_ pollId: String, _ optionId: String, _ previousOptionId: String?) -> Void)? = nil
+    var onConfirm: ((_ pollId: String) -> Void)? = nil
+    var isConfirmed: Bool = false
     @State private var selectedOptionId: String?
 
     private var total: Int { poll.totalVoteCount }
@@ -33,6 +35,7 @@ struct PollCardView: View {
 
                 VStack(spacing: 12) {
                     optionsView
+                    confirmButton
                     progressBarView
                     if total > 0 {
                         percentagesCaption
@@ -114,6 +117,7 @@ struct PollCardView: View {
         let isSelected = selectedOptionId == option.id
 
         return Button {
+            if isConfirmed { return }
             if selectedOptionId == option.id { return }
             let previousId = selectedOptionId
             if let prevId = previousId,
@@ -149,8 +153,27 @@ struct PollCardView: View {
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(isSelected ? AuthTheme.accent : Color.clear, lineWidth: 1.5)
             )
+            .opacity(isConfirmed ? 0.55 : 1)
         }
         .buttonStyle(PollOptionButtonStyle())
+        .disabled(isConfirmed)
+    }
+
+    private var confirmButton: some View {
+        Button {
+            onConfirm?(poll.id)
+        } label: {
+            Text(isConfirmed ? "Confirmed" : "Confirm")
+                .font(Typography.subheadlineSemibold)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(isConfirmed ? AuthTheme.primary.opacity(0.2) : AuthTheme.accent.opacity(0.9))
+                .foregroundStyle(isConfirmed ? AuthTheme.secondary : AuthTheme.background)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+        }
+        .buttonStyle(.plain)
+        .disabled(isConfirmed || selectedOptionId == nil)
+        .opacity((isConfirmed || selectedOptionId == nil) ? 0.7 : 1)
     }
 
     private var progressBarView: some View {

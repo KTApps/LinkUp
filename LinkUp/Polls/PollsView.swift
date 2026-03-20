@@ -7,6 +7,7 @@ import SwiftUI
 import PhotosUI
 import UIKit
 import UniformTypeIdentifiers
+import FirebaseFirestore
 
 private let headerBarHeight: CGFloat = 20
 private let headerBottomPadding: CGFloat = 0
@@ -23,6 +24,7 @@ private let underlyingCardFadeStartRotation: Double = 22
 struct PollsView: View {
     @ObservedObject var authState: AuthState
     @Binding var polls: [Poll]
+    @Binding var confirmedPollIds: Set<String>
     var onOpenSettings: () -> Void
     var onOpenPollHistory: () -> Void
     @State private var selectedPhotoItem: PhotosPickerItem?
@@ -36,6 +38,9 @@ struct PollsView: View {
     @State private var pollToDeleteForConfirmation: Poll?
     /// Current user's vote per poll: pollId -> optionId (so we can show it highlighted).
     @State private var myVotes: [String: String] = [:]
+    @State private var confirmationsListener: ListenerRegistration?
+    @State private var notifications: [AppNotificationItem] = []
+    @State private var showNotificationsSheet = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -60,8 +65,18 @@ struct PollsView: View {
             .task(id: polls.map(\.id)) {
                 await loadMyVotes()
             }
+            .onAppear {
+                attachConfirmationsListener()
+            }
+            .onDisappear {
+                confirmationsListener?.remove()
+                confirmationsListener = nil
+            }
             .sheet(item: $pollForOwnerSheet) { poll in
                 pollOwnerActionsSheet(poll: poll)
+            }
+            .sheet(isPresented: $showNotificationsSheet) {
+                notificationsSheet
             }
             .sheet(item: $pollForEdit) { poll in
                 NavigationStack {
@@ -145,6 +160,7 @@ struct PollsView: View {
     }
 
     private func handleVote(pollId: String, optionId: String, previousOptionId: String?) {
+        print("[PollsView] handleVote pollId=\(pollId) optionId=\(optionId) previous=\(previousOptionId ?? "nil")")
         Task {
             do {
                 let updated = try await authState.submitVote(pollId: pollId, optionId: optionId, previousOptionId: previousOptionId)
@@ -155,7 +171,50 @@ struct PollsView: View {
                     myVotes[pollId] = optionId
                 }
             } catch {
-                // Keep local state; poll may not exist in Firestore (e.g. hardcoded)
+                print("[PollsView] handleVote error pollId=\(pollId) error=\(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func handleConfirm(pollId: String) {
+        print("[PollsView] handleConfirm pollId=\(pollId)")
+        Task {
+            do {
+                let confirmation = try await authState.confirmVote(pollId: pollId)
+                await MainActor.run {
+                    confirmedPollIds.insert(pollId)
+                    if confirmation.selectedSentiment == .negative {
+                        // Negative confirmations are removed from stack only.
+                        confirmedPollIds.insert(pollId)
+                    }
+                }
+                print("[PollsView] handleConfirm success pollId=\(pollId) sentiment=\(confirmation.selectedSentiment.rawValue)")
+            } catch {
+                print("[PollsView] handleConfirm error pollId=\(pollId) error=\(error.localizedDescription)")
+            }
+        }
+    }
+
+    private func attachConfirmationsListener() {
+        confirmationsListener?.remove()
+        confirmationsListener = authState.addMyConfirmationsListener { confirmations in
+            Task { @MainActor in
+                confirmedPollIds = Set(confirmations.map(\.pollId))
+                print("[PollsView] confirmationsListener update count=\(confirmations.count) confirmedPollIds=\(confirmedPollIds.count)")
+            }
+        }
+    }
+
+    private func loadNotifications() {
+        print("[PollsView] loadNotifications started")
+        Task {
+            if let loaded = try? await authState.fetchNotifications() {
+                await MainActor.run {
+                    notifications = loaded
+                    print("[PollsView] loadNotifications success count=\(loaded.count)")
+                }
+            } else {
+                print("[PollsView] loadNotifications failed")
             }
         }
     }
@@ -253,11 +312,13 @@ struct PollsView: View {
 
     @ViewBuilder
     private func deckContent(geometry: GeometryProxy) -> some View {
+        let activeIndices = polls.indices.filter { !confirmedPollIds.contains(polls[$0].id) }
+        let activeCount = activeIndices.count
         let width = geometry.size.width
         let contentTop = max(0, headerBarHeight + headerBottomPadding + geometry.safeAreaInsets.top - 20)
 
         Group {
-            if polls.isEmpty {
+            if activeCount == 0 {
                 emptyDeckView
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.top, contentTop)
@@ -272,8 +333,15 @@ struct PollsView: View {
                 }()
 
                 ZStack(alignment: .top) {
-                    if polls.count > 1 {
-                        PollCardView(poll: $polls[1], myVoteOptionId: myVotes[polls[1].id], onVote: handleVote)
+                    if activeCount > 1 {
+                        let secondIndex = activeIndices[1]
+                        PollCardView(
+                            poll: Binding(get: { polls[secondIndex] }, set: { polls[secondIndex] = $0 }),
+                            myVoteOptionId: myVotes[polls[secondIndex].id],
+                            onVote: handleVote,
+                            onConfirm: handleConfirm,
+                            isConfirmed: confirmedPollIds.contains(polls[secondIndex].id)
+                        )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -282,8 +350,15 @@ struct PollsView: View {
                             .allowsHitTesting(false)
                             .zIndex(0)
                     }
-                    if polls.count > 1 {
-                        PollCardView(poll: $polls[polls.count - 1], myVoteOptionId: myVotes[polls[polls.count - 1].id], onVote: handleVote)
+                    if activeCount > 1 {
+                        let lastIndex = activeIndices[activeCount - 1]
+                        PollCardView(
+                            poll: Binding(get: { polls[lastIndex] }, set: { polls[lastIndex] = $0 }),
+                            myVoteOptionId: myVotes[polls[lastIndex].id],
+                            onVote: handleVote,
+                            onConfirm: handleConfirm,
+                            isConfirmed: confirmedPollIds.contains(polls[lastIndex].id)
+                        )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
                             .padding(.top, contentTop)
@@ -293,7 +368,8 @@ struct PollsView: View {
                             .zIndex(0)
                     }
 
-                    PollCardView(poll: $polls[0], myVoteOptionId: myVotes[polls[0].id], onEllipsisTapped: { poll in
+                    let topIndex = activeIndices[0]
+                    PollCardView(poll: Binding(get: { polls[topIndex] }, set: { polls[topIndex] = $0 }), myVoteOptionId: myVotes[polls[topIndex].id], onEllipsisTapped: { poll in
                         if isOwnPoll(poll) {
                             pollForOwnerSheet = poll
                         } else {
@@ -301,7 +377,7 @@ struct PollsView: View {
                                 pollForMoreDetails = poll
                             }
                         }
-                    }, onVote: handleVote)
+                    }, onVote: handleVote, onConfirm: handleConfirm, isConfirmed: confirmedPollIds.contains(polls[topIndex].id))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, deckHorizontalPadding)
                         .padding(.top, contentTop)
@@ -323,7 +399,7 @@ struct PollsView: View {
                                     guard !isSendingTopToBack, !isBringingBackToFront else { return }
                                     if value.translation.width < -swipeThreshold {
                                         sendTopCardToBack(screenWidth: width)
-                                    } else if value.translation.width > swipeThreshold, polls.count > 1 {
+                                    } else if value.translation.width > swipeThreshold, activeCount > 1 {
                                         bringBackCardToFront(screenWidth: width)
                                     } else {
                                         withAnimation(.easeOut(duration: swipeAnimationDuration)) {
@@ -344,9 +420,11 @@ struct PollsView: View {
             topCardDragOffset = -screenWidth
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + swipeAnimationDuration) {
-            if !polls.isEmpty {
-                let top = polls[0]
-                polls = Array(polls.dropFirst()) + [top]
+            let activeIndices = polls.indices.filter { !confirmedPollIds.contains(polls[$0].id) }
+            if let topActive = activeIndices.first {
+                let top = polls[topActive]
+                polls.remove(at: topActive)
+                polls.append(top)
             }
             topCardDragOffset = 0
             isSendingTopToBack = false
@@ -359,8 +437,11 @@ struct PollsView: View {
             topCardDragOffset = screenWidth
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + swipeAnimationDuration) {
-            if polls.count > 1, let last = polls.last {
-                polls = [last] + polls.dropLast()
+            let activeIndices = polls.indices.filter { !confirmedPollIds.contains(polls[$0].id) }
+            if activeIndices.count > 1, let lastActiveIndex = activeIndices.last {
+                let last = polls[lastActiveIndex]
+                polls.remove(at: lastActiveIndex)
+                polls.insert(last, at: activeIndices[0])
             }
             topCardDragOffset = 0
             isBringingBackToFront = false
@@ -400,6 +481,15 @@ struct PollsView: View {
                 .buttonStyle(HeaderIconButtonStyle())
 
                 Button {
+                    loadNotifications()
+                    showNotificationsSheet = true
+                } label: {
+                    Image(systemName: "bell.fill")
+                        .font(.system(size: 22))
+                }
+                .buttonStyle(HeaderIconButtonStyle())
+
+                Button {
                     onOpenSettings()
                 } label: {
                     Image(systemName: "gearshape.fill")
@@ -420,6 +510,60 @@ struct PollsView: View {
             Task {
                 await handleSelectedPhotoItem(newItem)
             }
+        }
+    }
+
+    private var notificationsSheet: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                if notifications.isEmpty {
+                    Text("No notifications yet")
+                        .font(Typography.subheadline)
+                        .foregroundStyle(AuthTheme.secondary)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    List {
+                        ForEach(notifications) { item in
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text("\(item.actorUsername) confirmed")
+                                    .font(Typography.subheadlineSemibold)
+                                    .foregroundStyle(AuthTheme.primary)
+                                Text(item.pollQuestion)
+                                    .font(Typography.subheadline)
+                                    .foregroundStyle(AuthTheme.secondary)
+                                HStack(spacing: 8) {
+                                    Button("Confirm too") {
+                                        handleConfirm(pollId: item.pollId)
+                                        Task {
+                                            try? await authState.markNotificationRead(notificationId: item.id)
+                                            loadNotifications()
+                                        }
+                                    }
+                                    .buttonStyle(.borderedProminent)
+                                    .tint(AuthTheme.accent)
+                                    Button("Change vote") {
+                                        confirmedPollIds.remove(item.pollId)
+                                        Task {
+                                            try? await authState.markNotificationRead(notificationId: item.id)
+                                            loadNotifications()
+                                        }
+                                        showNotificationsSheet = false
+                                    }
+                                    .buttonStyle(.bordered)
+                                }
+                            }
+                            .listRowBackground(AuthTheme.background)
+                        }
+                    }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                }
+            }
+            .background(AuthTheme.background)
+            .navigationTitle("Notifications")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AuthTheme.background, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 
@@ -510,6 +654,12 @@ private struct ProfileImageData: Transferable {
 
 #Preview {
     NavigationStack {
-        PollsView(authState: AuthState(), polls: .constant(HardcodedPolls.sample), onOpenSettings: {}, onOpenPollHistory: {})
+        PollsView(
+            authState: AuthState(),
+            polls: .constant(HardcodedPolls.sample),
+            confirmedPollIds: .constant([]),
+            onOpenSettings: {},
+            onOpenPollHistory: {}
+        )
     }
 }

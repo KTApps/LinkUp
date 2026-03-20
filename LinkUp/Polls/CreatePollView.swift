@@ -51,7 +51,7 @@ struct CreatePollView: View {
                 if let error = errorMessage {
                     Text(error)
                         .font(Typography.subheadline)
-                        .foregroundStyle(Color.red)
+                        .foregroundStyle(AuthTheme.accent)
                         .padding(.horizontal)
                 }
 
@@ -149,6 +149,10 @@ struct CreatePollView: View {
             Text("Date & time")
                 .font(Typography.subheadlineMedium)
                 .foregroundStyle(AuthTheme.secondary)
+                .padding(.horizontal)
+            Text("Required")
+                .font(.caption)
+                .foregroundStyle(AuthTheme.accent)
                 .padding(.horizontal)
 
             DatePicker("", selection: $activityDate)
@@ -393,6 +397,10 @@ struct CreatePollView: View {
         let visibleToUids = computedVisibleToUids()
         guard visibleToUids.count > 1 else {
             errorMessage = "Select at least one person or group to share with."
+            return
+        }
+        guard activityDate.timeIntervalSince1970 > 0 else {
+            errorMessage = "Choose an activity date and time."
             return
         }
         isSubmitting = true

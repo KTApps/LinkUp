@@ -19,7 +19,12 @@ private var monthYearFormatter: DateFormatter {
 
 /// Scrollable calendar showing multiple months (1–2 visible at a time). Display-only; AuthTheme.
 struct CalendarView: View {
+    @ObservedObject var authState: AuthState
+    @Binding var confirmedPollIds: Set<String>
     private let calendar = Calendar.current
+    @State private var myConfirmations: [PollConfirmation] = []
+    @State private var confirmationRates: [String: Double] = [:]
+    @State private var selectedPollForDetails: Poll?
     private var monthsToShow: [Date] {
         guard let start = calendar.date(byAdding: .month, value: -monthsRange, to: Date()),
               let end = calendar.date(byAdding: .month, value: monthsRange, to: Date()) else {
@@ -60,6 +65,42 @@ struct CalendarView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AuthTheme.background)
+        .task {
+            await loadConfirmations()
+        }
+        .overlay {
+            if let poll = selectedPollForDetails {
+                ZStack {
+                    Rectangle()
+                        .fill(.ultraThinMaterial)
+                        .overlay(Color.black.opacity(0.15))
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeOut(duration: 0.25)) {
+                                selectedPollForDetails = nil
+                            }
+                        }
+                    MoreDetailsPopupView(
+                        poll: poll,
+                        showUnconfirmButton: true,
+                        onUnconfirm: {
+                            Task {
+                                try? await authState.unconfirmVote(pollId: poll.id)
+                                await loadConfirmations()
+                            }
+                            withAnimation(.easeOut(duration: 0.25)) {
+                                selectedPollForDetails = nil
+                            }
+                        },
+                        onClose: {
+                            withAnimation(.easeOut(duration: 0.25)) {
+                                selectedPollForDetails = nil
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 
     private func monthBlock(monthStart: Date) -> some View {
@@ -126,6 +167,8 @@ struct CalendarView: View {
 
         return Group {
             if let day = dayNumber {
+                let date = dayDate(monthStart: monthStart, day: day)
+                let dayConfirmations = myConfirmations.filter { calendar.isDate($0.activityDate, inSameDayAs: date) }
                 ZStack {
                     if isToday {
                         Circle()
@@ -135,13 +178,69 @@ struct CalendarView: View {
                     Text("\(day)")
                         .font(dayCellFont)
                         .foregroundStyle(isToday ? AuthTheme.accent : AuthTheme.primary)
+                    if let first = dayConfirmations.first {
+                        Circle()
+                            .fill(dotColor(for: first.pollId))
+                            .frame(width: 6, height: 6)
+                            .offset(y: 14)
+                    }
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 36)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    guard let first = dayConfirmations.first else { return }
+                    Task {
+                        if let poll = try? await authState.fetchPollById(pollId: first.pollId) {
+                            await MainActor.run {
+                                selectedPollForDetails = poll
+                            }
+                        }
+                    }
+                }
             } else {
                 Color.clear
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
+            }
+        }
+    }
+
+    private func dayDate(monthStart: Date, day: Int) -> Date {
+        var comps = calendar.dateComponents([.year, .month], from: monthStart)
+        comps.day = day
+        return calendar.date(from: comps) ?? monthStart
+    }
+
+    private func dotColor(for pollId: String) -> Color {
+        let rate = confirmationRates[pollId] ?? 0
+        if rate > 0.79 { return .green }
+        if rate >= 0.60 { return .orange }
+        return .red
+    }
+
+    private func loadConfirmations() async {
+        print("[CalendarView] loadConfirmations started")
+        do {
+            let confirmations = try await authState.fetchMyPositiveConfirmations()
+            var rates: [String: Double] = [:]
+            for confirmation in confirmations {
+                if rates[confirmation.pollId] == nil {
+                    rates[confirmation.pollId] = try await authState.fetchPositiveConfirmationRate(pollId: confirmation.pollId)
+                }
+            }
+            await MainActor.run {
+                myConfirmations = confirmations
+                confirmationRates = rates
+                confirmedPollIds = Set(confirmations.map(\.pollId))
+                print("[CalendarView] loadConfirmations success confirmations=\(confirmations.count) rates=\(rates.count)")
+            }
+        } catch {
+            await MainActor.run {
+                myConfirmations = []
+                confirmationRates = [:]
+                confirmedPollIds = []
+                print("[CalendarView] loadConfirmations error=\(error.localizedDescription)")
             }
         }
     }
@@ -155,6 +254,6 @@ private extension Calendar {
 }
 
 #Preview {
-    CalendarView()
+    CalendarView(authState: AuthState(), confirmedPollIds: .constant([]))
         .background(AuthTheme.background)
 }

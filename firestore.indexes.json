@@ -33,6 +33,15 @@
         { "fieldPath": "visibleToUids", "arrayConfig": "CONTAINS" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "poll_confirmations",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "selectedSentiment", "order": "ASCENDING" },
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "activityDate", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []
