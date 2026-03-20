@@ -57,7 +57,6 @@ extension AuthState {
         imageData: Data?,
         visibleToUids: [String]
     ) async throws -> Poll {
-        print("[PollService] createPoll started")
         guard let uid = authRef.currentUser?.uid else {
             throw PollServiceError.notAuthenticated
         }
@@ -99,7 +98,6 @@ extension AuthState {
         )
         let encoded = try Firestore.Encoder().encode(doc)
         try await databaseRef.collection("polls").document(pollId).setData(encoded)
-        print("[PollService] createPoll success pollId=\(pollId) options=\(options.count) visibleTo=\(allVisible.count)")
         return poll
     }
 
@@ -181,7 +179,6 @@ extension AuthState {
     /// Submits a vote: updates poll option counts and stores response. Requires current user (uid + username).
     /// Decrements previous option if any; increments new option. Use batch for atomicity.
     func submitVote(pollId: String, optionId: String, previousOptionId: String?) async throws -> Poll {
-        print("[PollService] submitVote started pollId=\(pollId) optionId=\(optionId) previous=\(previousOptionId ?? "nil")")
         guard let uid = authRef.currentUser?.uid,
               let username = currentUser?.username else {
             throw PollServiceError.notAuthenticated
@@ -193,7 +190,6 @@ extension AuthState {
         let existingOptionId = existingResponse?["optionId"] as? String
         let isConfirmed = existingResponse?["isConfirmed"] as? Bool ?? false
         if isConfirmed {
-            print("[PollService] submitVote blocked (response.isConfirmed=true) pollId=\(pollId) uid=\(uid)")
             throw PollServiceError.alreadyConfirmed
         }
 
@@ -230,12 +226,10 @@ extension AuthState {
         batch.setData(["optionId": optionId, "username": username, "isConfirmed": false], forDocument: responseRef, merge: true)
 
         try await batch.commit()
-        print("[PollService] submitVote success pollId=\(pollId) uid=\(uid)")
         return updatedPoll
     }
 
     func confirmVote(pollId: String) async throws -> PollConfirmation {
-        print("[PollService] confirmVote started pollId=\(pollId)")
         guard let uid = authRef.currentUser?.uid else {
             throw PollServiceError.notAuthenticated
         }
@@ -243,7 +237,6 @@ extension AuthState {
         let responseRef = pollRef.collection("responses").document(uid)
         let responseSnapshot = try await responseRef.getDocument()
         guard let optionId = responseSnapshot.data()?["optionId"] as? String else {
-            print("[PollService] confirmVote failed no vote pollId=\(pollId) uid=\(uid)")
             throw PollServiceError.voteRequiredBeforeConfirm
         }
         let pollSnapshot = try await pollRef.getDocument()
@@ -272,19 +265,13 @@ extension AuthState {
         batch.setData(data, forDocument: databaseRef.collection("poll_confirmations").document(confirmationId))
         batch.setData(["isConfirmed": true], forDocument: responseRef, merge: true)
         try await batch.commit()
-        print("[PollService] confirmVote wrote confirmation id=\(confirmationId) sentiment=\(selected.sentiment.rawValue)")
         if selected.sentiment == .positive {
-            print("[PollService] confirmVote positive sentiment -> creating notifications")
             try await createPositiveConfirmationNotifications(poll: poll, actorUid: uid)
-        } else {
-            print("[PollService] confirmVote negative sentiment -> no notifications")
         }
-        print("[PollService] confirmVote success pollId=\(pollId)")
         return confirmation
     }
 
     func unconfirmVote(pollId: String) async throws {
-        print("[PollService] unconfirmVote started pollId=\(pollId)")
         guard let uid = authRef.currentUser?.uid else {
             throw PollServiceError.notAuthenticated
         }
@@ -295,20 +282,16 @@ extension AuthState {
         batch.deleteDocument(confirmationRef)
         batch.setData(["isConfirmed": false], forDocument: responseRef, merge: true)
         try await batch.commit()
-        print("[PollService] unconfirmVote success pollId=\(pollId) uid=\(uid)")
     }
 
     func fetchMyPositiveConfirmations() async throws -> [PollConfirmation] {
-        print("[PollService] fetchMyPositiveConfirmations started")
         guard let uid = authRef.currentUser?.uid else { return [] }
         let snapshot = try await databaseRef.collection("poll_confirmations")
             .whereField("userId", isEqualTo: uid)
             .whereField("selectedSentiment", isEqualTo: PollOptionSentiment.positive.rawValue)
             .order(by: "activityDate", descending: false)
             .getDocuments()
-        let result = snapshot.documents.compactMap { try? $0.data(as: PollConfirmation.self) }
-        print("[PollService] fetchMyPositiveConfirmations success count=\(result.count)")
-        return result
+        return snapshot.documents.compactMap { try? $0.data(as: PollConfirmation.self) }
     }
 
     func addMyConfirmationsListener(onUpdate: @escaping ([PollConfirmation]) -> Void) -> ListenerRegistration? {
@@ -323,7 +306,6 @@ extension AuthState {
     }
 
     func fetchPositiveConfirmationRate(pollId: String) async throws -> Double {
-        print("[PollService] fetchPositiveConfirmationRate started pollId=\(pollId)")
         let pollRef = databaseRef.collection("polls").document(pollId)
         let responsesSnapshot = try await pollRef.collection("responses").getDocuments()
         let totalVoters = responsesSnapshot.documents.count
@@ -332,9 +314,7 @@ extension AuthState {
             .whereField("pollId", isEqualTo: pollId)
             .whereField("selectedSentiment", isEqualTo: PollOptionSentiment.positive.rawValue)
             .getDocuments()
-        let rate = Double(confirmationSnapshot.documents.count) / Double(totalVoters)
-        print("[PollService] fetchPositiveConfirmationRate success pollId=\(pollId) totalVoters=\(totalVoters) positive=\(confirmationSnapshot.documents.count) rate=\(rate)")
-        return rate
+        return Double(confirmationSnapshot.documents.count) / Double(totalVoters)
     }
 
     func fetchNotifications() async throws -> [AppNotificationItem] {
@@ -365,11 +345,9 @@ extension AuthState {
     }
 
     private func createPositiveConfirmationNotifications(poll: Poll, actorUid: String) async throws {
-        print("[PollService] createPositiveConfirmationNotifications started pollId=\(poll.id)")
         let responses = try await databaseRef.collection("polls").document(poll.id)
             .collection("responses")
             .getDocuments()
-        var sentCount = 0
         for response in responses.documents {
             let recipientUid = response.documentID
             let docId = UUID().uuidString
@@ -389,9 +367,7 @@ extension AuthState {
                 .collection("notifications")
                 .document(docId)
                 .setData(payload)
-            sentCount += 1
         }
-        print("[PollService] createPositiveConfirmationNotifications success pollId=\(poll.id) sentCount=\(sentCount)")
     }
 
     /// Fetches the current user's vote for a poll (optionId if they voted). Returns nil if they haven't voted.

@@ -39,8 +39,6 @@ struct PollsView: View {
     /// Current user's vote per poll: pollId -> optionId (so we can show it highlighted).
     @State private var myVotes: [String: String] = [:]
     @State private var confirmationsListener: ListenerRegistration?
-    @State private var notifications: [AppNotificationItem] = []
-    @State private var showNotificationsSheet = false
 
     var body: some View {
         GeometryReader { geometry in
@@ -74,9 +72,6 @@ struct PollsView: View {
             }
             .sheet(item: $pollForOwnerSheet) { poll in
                 pollOwnerActionsSheet(poll: poll)
-            }
-            .sheet(isPresented: $showNotificationsSheet) {
-                notificationsSheet
             }
             .sheet(item: $pollForEdit) { poll in
                 NavigationStack {
@@ -160,7 +155,6 @@ struct PollsView: View {
     }
 
     private func handleVote(pollId: String, optionId: String, previousOptionId: String?) {
-        print("[PollsView] handleVote pollId=\(pollId) optionId=\(optionId) previous=\(previousOptionId ?? "nil")")
         Task {
             do {
                 let updated = try await authState.submitVote(pollId: pollId, optionId: optionId, previousOptionId: previousOptionId)
@@ -171,13 +165,12 @@ struct PollsView: View {
                     myVotes[pollId] = optionId
                 }
             } catch {
-                print("[PollsView] handleVote error pollId=\(pollId) error=\(error.localizedDescription)")
+                // Keep local state; server write failure should not crash the deck interaction.
             }
         }
     }
 
     private func handleConfirm(pollId: String) {
-        print("[PollsView] handleConfirm pollId=\(pollId)")
         Task {
             do {
                 let confirmation = try await authState.confirmVote(pollId: pollId)
@@ -188,9 +181,8 @@ struct PollsView: View {
                         confirmedPollIds.insert(pollId)
                     }
                 }
-                print("[PollsView] handleConfirm success pollId=\(pollId) sentiment=\(confirmation.selectedSentiment.rawValue)")
             } catch {
-                print("[PollsView] handleConfirm error pollId=\(pollId) error=\(error.localizedDescription)")
+                // Keep UI unchanged if confirmation fails.
             }
         }
     }
@@ -200,21 +192,6 @@ struct PollsView: View {
         confirmationsListener = authState.addMyConfirmationsListener { confirmations in
             Task { @MainActor in
                 confirmedPollIds = Set(confirmations.map(\.pollId))
-                print("[PollsView] confirmationsListener update count=\(confirmations.count) confirmedPollIds=\(confirmedPollIds.count)")
-            }
-        }
-    }
-
-    private func loadNotifications() {
-        print("[PollsView] loadNotifications started")
-        Task {
-            if let loaded = try? await authState.fetchNotifications() {
-                await MainActor.run {
-                    notifications = loaded
-                    print("[PollsView] loadNotifications success count=\(loaded.count)")
-                }
-            } else {
-                print("[PollsView] loadNotifications failed")
             }
         }
     }
@@ -481,15 +458,6 @@ struct PollsView: View {
                 .buttonStyle(HeaderIconButtonStyle())
 
                 Button {
-                    loadNotifications()
-                    showNotificationsSheet = true
-                } label: {
-                    Image(systemName: "bell.fill")
-                        .font(.system(size: 22))
-                }
-                .buttonStyle(HeaderIconButtonStyle())
-
-                Button {
                     onOpenSettings()
                 } label: {
                     Image(systemName: "gearshape.fill")
@@ -510,60 +478,6 @@ struct PollsView: View {
             Task {
                 await handleSelectedPhotoItem(newItem)
             }
-        }
-    }
-
-    private var notificationsSheet: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                if notifications.isEmpty {
-                    Text("No notifications yet")
-                        .font(Typography.subheadline)
-                        .foregroundStyle(AuthTheme.secondary)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else {
-                    List {
-                        ForEach(notifications) { item in
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("\(item.actorUsername) confirmed")
-                                    .font(Typography.subheadlineSemibold)
-                                    .foregroundStyle(AuthTheme.primary)
-                                Text(item.pollQuestion)
-                                    .font(Typography.subheadline)
-                                    .foregroundStyle(AuthTheme.secondary)
-                                HStack(spacing: 8) {
-                                    Button("Confirm too") {
-                                        handleConfirm(pollId: item.pollId)
-                                        Task {
-                                            try? await authState.markNotificationRead(notificationId: item.id)
-                                            loadNotifications()
-                                        }
-                                    }
-                                    .buttonStyle(.borderedProminent)
-                                    .tint(AuthTheme.accent)
-                                    Button("Change vote") {
-                                        confirmedPollIds.remove(item.pollId)
-                                        Task {
-                                            try? await authState.markNotificationRead(notificationId: item.id)
-                                            loadNotifications()
-                                        }
-                                        showNotificationsSheet = false
-                                    }
-                                    .buttonStyle(.bordered)
-                                }
-                            }
-                            .listRowBackground(AuthTheme.background)
-                        }
-                    }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                }
-            }
-            .background(AuthTheme.background)
-            .navigationTitle("Notifications")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AuthTheme.background, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
         }
     }
 

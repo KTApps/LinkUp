@@ -220,7 +220,6 @@ struct CalendarView: View {
     }
 
     private func loadConfirmations() async {
-        print("[CalendarView] loadConfirmations started")
         do {
             let confirmations = try await authState.fetchMyPositiveConfirmations()
             var rates: [String: Double] = [:]
@@ -233,14 +232,12 @@ struct CalendarView: View {
                 myConfirmations = confirmations
                 confirmationRates = rates
                 confirmedPollIds = Set(confirmations.map(\.pollId))
-                print("[CalendarView] loadConfirmations success confirmations=\(confirmations.count) rates=\(rates.count)")
             }
         } catch {
             await MainActor.run {
                 myConfirmations = []
                 confirmationRates = [:]
                 confirmedPollIds = []
-                print("[CalendarView] loadConfirmations error=\(error.localizedDescription)")
             }
         }
     }
