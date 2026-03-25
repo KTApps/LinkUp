@@ -81,19 +81,7 @@ struct MoreDetailsPopupView: View {
                     .font(Typography.headline)
                     .foregroundStyle(AuthTheme.primary)
                     .multilineTextAlignment(.leading)
-                if let date = poll.activityDate {
-                    HStack(spacing: 4) {
-                        Text(date, format: .dateTime.hour().minute())
-                        Text("·")
-                        Text(date, format: .dateTime.day().month().year())
-                    }
-                    .font(Typography.subheadline)
-                    .foregroundStyle(AuthTheme.secondary)
-                } else {
-                    Text("No date set")
-                        .font(Typography.subheadline)
-                        .foregroundStyle(AuthTheme.secondary)
-                }
+                PollActivityDateFormatting.dateSubtitle(activityDate: poll.activityDate)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
 

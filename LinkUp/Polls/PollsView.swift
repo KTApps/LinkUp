@@ -32,7 +32,6 @@ struct PollsView: View {
     @State private var topCardDragOffset: CGFloat = 0
     @State private var isSendingTopToBack = false
     @State private var isBringingBackToFront = false
-    @State private var pollForMoreDetails: Poll?
     @State private var pollForOwnerSheet: Poll?
     @State private var pollForEdit: Poll?
     @State private var pollToDeleteForConfirmation: Poll?
@@ -51,16 +50,6 @@ struct PollsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AuthTheme.background)
         .toolbar(.hidden, for: .navigationBar)
-        .overlay {
-            if let poll = pollForMoreDetails {
-                moreDetailsOverlay(poll: poll)
-                    .transition(.asymmetric(
-                        insertion: .opacity.combined(with: .scale(scale: 0.94)),
-                        removal: .opacity.combined(with: .scale(scale: 0.94))
-                    ))
-            }
-        }
-        .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
         .task(id: polls.map(\.id)) {
             await loadMyVotes()
         }
@@ -119,9 +108,6 @@ struct PollsView: View {
         guard let poll = pollToDeleteForConfirmation else { return }
         let pollId = poll.id
         pollToDeleteForConfirmation = nil
-        if pollForMoreDetails?.id == pollId {
-            pollForMoreDetails = nil
-        }
         Task {
             do {
                 try await authState.deletePoll(pollId: pollId)
@@ -207,12 +193,6 @@ struct PollsView: View {
                 .padding(.bottom, 12)
 
             VStack(spacing: 0) {
-                ownerActionRow(icon: "doc.text", title: "More details", showDivider: true) {
-                    pollForOwnerSheet = nil
-                    withAnimation(.easeOut(duration: 0.28)) {
-                        pollForMoreDetails = poll
-                    }
-                }
                 ownerActionRow(icon: "pencil", title: "Edit poll", showDivider: true) {
                     pollForOwnerSheet = nil
                     pollForEdit = poll
@@ -233,7 +213,7 @@ struct PollsView: View {
         }
         .frame(maxWidth: .infinity)
         .background(AuthTheme.background)
-        .presentationDetents([.height(220)])
+        .presentationDetents([.height(168)])
         .presentationDragIndicator(.visible)
     }
 
@@ -262,27 +242,6 @@ struct PollsView: View {
                     .fill(AuthTheme.primary.opacity(0.08))
                     .frame(height: 1)
                     .padding(.leading, 56)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private func moreDetailsOverlay(poll: Poll) -> some View {
-        ZStack(alignment: .center) {
-            Rectangle()
-                .fill(.ultraThinMaterial)
-                .overlay(Color.black.opacity(0.15))
-                .ignoresSafeArea()
-                .onTapGesture {
-                    withAnimation(.easeOut(duration: 0.4)) {
-                        pollForMoreDetails = nil
-                    }
-                }
-
-            MoreDetailsPopupView(poll: poll) {
-                withAnimation(.easeOut(duration: 0.28)) {
-                    pollForMoreDetails = nil
-                }
             }
         }
     }
@@ -342,15 +301,16 @@ struct PollsView: View {
                     }
 
                     let topIndex = activeIndices[0]
-                    PollCardView(poll: Binding(get: { polls[topIndex] }, set: { polls[topIndex] = $0 }), myVoteOptionId: myVotes[polls[topIndex].id], onEllipsisTapped: { poll in
-                        if isOwnPoll(poll) {
-                            pollForOwnerSheet = poll
-                        } else {
-                            withAnimation(.easeOut(duration: 0.28)) {
-                                pollForMoreDetails = poll
-                            }
-                        }
-                    }, onVote: handleVote, onConfirm: handleConfirm, isConfirmed: confirmedPollIds.contains(polls[topIndex].id))
+                    PollCardView(
+                        poll: Binding(get: { polls[topIndex] }, set: { polls[topIndex] = $0 }),
+                        myVoteOptionId: myVotes[polls[topIndex].id],
+                        onEllipsisTapped: isOwnPoll(polls[topIndex])
+                            ? { poll in pollForOwnerSheet = poll }
+                            : nil,
+                        onVote: handleVote,
+                        onConfirm: handleConfirm,
+                        isConfirmed: confirmedPollIds.contains(polls[topIndex].id)
+                    )
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, deckHorizontalPadding)
                         .padding(.bottom, deckBottomPadding)

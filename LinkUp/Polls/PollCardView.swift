@@ -6,52 +6,65 @@
 import SwiftUI
 
 private let progressBarHeight: CGFloat = 7
+private let cardCornerRadius: CGFloat = 12
 private let progressAnimation = Animation.easeOut(duration: 0.35)
 private let tapAnimation = Animation.easeOut(duration: 0.15)
-/// Single poll card: question, vote count, selectable options, progress bar.
-/// Uses AuthTheme. Pass myVoteOptionId so the user's saved vote is highlighted (e.g. after re-login).
+
+/// Full-bleed media poll card with TikTok-style overlays; owner-only ellipsis.
 struct PollCardView: View {
     @Binding var poll: Poll
-    /// Current user's saved vote (optionId) from Firestore; shown highlighted in cyan.
     var myVoteOptionId: String? = nil
     var onEllipsisTapped: ((Poll) -> Void)? = nil
     var onVote: ((_ pollId: String, _ optionId: String, _ previousOptionId: String?) -> Void)? = nil
     var onConfirm: ((_ pollId: String) -> Void)? = nil
     var isConfirmed: Bool = false
+
     @State private var selectedOptionId: String?
+    @State private var showOverlays = true
+    @State private var mediaPageIndex = 0
+    @State private var descriptionExpanded = false
 
     private var total: Int { poll.totalVoteCount }
 
+    private var hasDisplayImage: Bool {
+        guard let s = poll.imageURL, !s.isEmpty else { return false }
+        return URL(string: s) != nil
+    }
+
+    private var dualPage: Bool { hasDisplayImage && poll.hasActivityLocation }
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            GeometryReader { geometry in
-                let titleY = geometry.size.height * 0.14
-                let centerY = geometry.size.height * 0.47
-
-                ZStack(alignment: .top) {
-                    titleBlock
-                        .frame(maxWidth: .infinity)
-                        .position(x: geometry.size.width / 2, y: titleY)
-
-                    VStack(spacing: 12) {
-                        optionsView
-                        confirmButton
-                        progressBarView
-                        if total > 0 {
-                            percentagesCaption
+            ZStack {
+                PollCardMediaPager(
+                    poll: poll,
+                    pageIndex: $mediaPageIndex,
+                    onSingleTap: {
+                        withAnimation(.easeOut(duration: 0.25)) {
+                            showOverlays.toggle()
+                        }
+                    },
+                    onDoubleTap: {
+                        guard dualPage else { return }
+                        withAnimation(.easeInOut(duration: 0.35)) {
+                            mediaPageIndex = mediaPageIndex == 0 ? 1 : 0
                         }
                     }
-                    .frame(maxWidth: .infinity)
-                    .position(x: geometry.size.width / 2, y: centerY)
+                )
+
+                if showOverlays {
+                    VStack(spacing: 0) {
+                        topOverlay
+                        middleHitArea
+                        bottomOverlay
+                    }
+                    .transition(.opacity)
                 }
             }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AuthTheme.primary.opacity(0.08))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .clipShape(RoundedRectangle(cornerRadius: cardCornerRadius))
             .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(AuthTheme.primary.opacity(0.08), lineWidth: 1)
+                RoundedRectangle(cornerRadius: cardCornerRadius)
+                    .strokeBorder(AuthTheme.primary.opacity(0.12), lineWidth: 1)
             )
 
             if onEllipsisTapped != nil {
@@ -61,12 +74,14 @@ struct PollCardView: View {
                     Image(systemName: "ellipsis")
                         .rotationEffect(.degrees(90))
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(AuthTheme.secondary)
+                        .foregroundStyle(AuthTheme.primary)
+                        .shadow(color: .black.opacity(0.6), radius: 3, x: 0, y: 1)
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .padding(8)
+                .zIndex(2)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -77,6 +92,9 @@ struct PollCardView: View {
         }
         .onChange(of: poll.id) { _, _ in
             selectedOptionId = myVoteOptionId
+            showOverlays = true
+            mediaPageIndex = 0
+            descriptionExpanded = false
         }
         .onChange(of: myVoteOptionId) { _, newValue in
             if let saved = newValue, poll.options.contains(where: { $0.id == saved }) {
@@ -87,12 +105,61 @@ struct PollCardView: View {
         }
     }
 
-    private var titleBlock: some View {
-        VStack(spacing: 12) {
+    private var topOverlay: some View {
+        VStack(alignment: .leading, spacing: 6) {
             Text(poll.question)
                 .font(Typography.headline)
                 .foregroundStyle(AuthTheme.primary)
-                .multilineTextAlignment(.center)
+                .multilineTextAlignment(.leading)
+                .shadow(color: .black.opacity(0.55), radius: 4, x: 0, y: 1)
+            PollActivityDateFormatting.dateSubtitle(activityDate: poll.activityDate)
+                .shadow(color: .black.opacity(0.45), radius: 3, x: 0, y: 1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 20)
+        .background(
+            LinearGradient(
+                colors: [Color.black.opacity(0.65), Color.black.opacity(0.35), Color.clear],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+    }
+
+    @ViewBuilder
+    private var middleHitArea: some View {
+        Spacer(minLength: 44)
+            .frame(maxWidth: .infinity)
+            .overlay {
+                if dualPage {
+                    PollMediaTapOverlayView(
+                        onSingleTap: {
+                            withAnimation(.easeOut(duration: 0.25)) {
+                                showOverlays = false
+                            }
+                        },
+                        onDoubleTap: {
+                            withAnimation(.easeInOut(duration: 0.35)) {
+                                mediaPageIndex = mediaPageIndex == 0 ? 1 : 0
+                            }
+                        }
+                    )
+                } else {
+                    Color.clear
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            withAnimation(.easeOut(duration: 0.25)) {
+                                showOverlays = false
+                            }
+                        }
+                }
+            }
+    }
+
+    private var bottomOverlay: some View {
+        VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 6) {
                 Rectangle()
                     .fill(AuthTheme.accent)
@@ -100,9 +167,48 @@ struct PollCardView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 1.5))
                 Text("\(total) votes")
                     .font(Typography.subheadline)
-                    .foregroundStyle(AuthTheme.secondary)
+                    .foregroundStyle(AuthTheme.primary)
+                    .shadow(color: .black.opacity(0.45), radius: 2, x: 0, y: 1)
+            }
+
+            if let desc = poll.activityDescription, !desc.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(desc)
+                        .font(Typography.subheadline)
+                        .foregroundStyle(AuthTheme.primary)
+                        .lineLimit(descriptionExpanded ? nil : 2)
+                        .multilineTextAlignment(.leading)
+                        .shadow(color: .black.opacity(0.45), radius: 2, x: 0, y: 1)
+                    if !descriptionExpanded && desc.count > 48 {
+                        Button("…more") {
+                            withAnimation(.easeOut(duration: 0.2)) {
+                                descriptionExpanded = true
+                            }
+                        }
+                        .font(Typography.subheadlineSemibold)
+                        .foregroundStyle(AuthTheme.accent)
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+
+            optionsView
+            confirmButton
+            progressBarView
+            if total > 0 {
+                percentagesCaption
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.top, 16)
+        .padding(.bottom, 16)
+        .background(
+            LinearGradient(
+                colors: [Color.clear, Color.black.opacity(0.5), Color.black.opacity(0.82)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 
     private var optionsView: some View {
@@ -206,7 +312,6 @@ struct PollCardView: View {
     }
 }
 
-/// ButtonStyle that scales on press for tap feedback.
 private struct PollOptionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
@@ -215,14 +320,62 @@ private struct PollOptionButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
-    struct PreviewWrapper: View {
-        @State private var poll = HardcodedPolls.sample[0]
+#Preview("Image only") {
+    struct W: View {
+        @State private var poll = HardcodedPolls.previewImageOnly
         var body: some View {
             PollCardView(poll: $poll)
                 .padding()
                 .background(AuthTheme.background)
         }
     }
-    return PreviewWrapper()
+    return W()
+}
+
+#Preview("Map only") {
+    struct W: View {
+        @State private var poll = HardcodedPolls.previewMapOnly
+        var body: some View {
+            PollCardView(poll: $poll)
+                .padding()
+                .background(AuthTheme.background)
+        }
+    }
+    return W()
+}
+
+#Preview("Image + map") {
+    struct W: View {
+        @State private var poll = HardcodedPolls.previewImageAndMap
+        var body: some View {
+            PollCardView(poll: $poll)
+                .padding()
+                .background(AuthTheme.background)
+        }
+    }
+    return W()
+}
+
+#Preview("Neither") {
+    struct W: View {
+        @State private var poll = HardcodedPolls.previewNeitherMedia
+        var body: some View {
+            PollCardView(poll: $poll)
+                .padding()
+                .background(AuthTheme.background)
+        }
+    }
+    return W()
+}
+
+#Preview("Confirmed") {
+    struct W: View {
+        @State private var poll = HardcodedPolls.previewConfirmed
+        var body: some View {
+            PollCardView(poll: $poll, isConfirmed: true)
+                .padding()
+                .background(AuthTheme.background)
+        }
+    }
+    return W()
 }

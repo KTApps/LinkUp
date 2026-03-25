@@ -54,6 +54,9 @@ struct Poll: Identifiable, Codable {
     var activityDate: Date?
     var activityDescription: String?
     var imageURL: String?
+    /// Optional WGS84 coordinates for activity map (nil until pin-on-map ships).
+    var activityLatitude: Double? = nil
+    var activityLongitude: Double? = nil
     /// UID of the user who created the poll; nil for legacy/hardcoded data.
     var createdBy: String? = nil
     /// UIDs who can see this poll (includes createdBy). Empty for legacy/hardcoded data.
@@ -61,6 +64,11 @@ struct Poll: Identifiable, Codable {
 
     var totalVoteCount: Int {
         options.reduce(0) { $0 + $1.count }
+    }
+
+    /// Both coordinates present (map page can be shown).
+    var hasActivityLocation: Bool {
+        activityLatitude != nil && activityLongitude != nil
     }
 }
 
@@ -105,6 +113,77 @@ enum HardcodedPolls {
             visibleToUids: []
         )
     ]
+
+    // MARK: Previews (PollCardView)
+
+    static let previewImageOnly = Poll(
+        id: "pv-image",
+        question: "Beach volleyball?",
+        options: [
+            PollOption(id: "y", text: "Yes", count: 3),
+            PollOption(id: "n", text: "No", count: 1)
+        ],
+        activityDate: Date(),
+        activityDescription: "Meet at north courts. Bring water and sunscreen if you have it — we’ll share snacks.",
+        imageURL: "https://picsum.photos/id/29/600/800",
+        visibleToUids: []
+    )
+
+    static let previewMapOnly = Poll(
+        id: "pv-map",
+        question: "Coffee walk?",
+        options: [
+            PollOption(id: "y", text: "Yes", count: 0),
+            PollOption(id: "n", text: "No", count: 0)
+        ],
+        activityDate: Date(),
+        activityDescription: nil,
+        imageURL: nil,
+        activityLatitude: 37.7749,
+        activityLongitude: -122.4194,
+        visibleToUids: []
+    )
+
+    static let previewImageAndMap = Poll(
+        id: "pv-both",
+        question: "Hike Twin Peaks?",
+        options: [
+            PollOption(id: "y", text: "Yes", count: 2),
+            PollOption(id: "n", text: "No", count: 0)
+        ],
+        activityDate: Date(),
+        activityDescription: "Sunset timing — dress warm.",
+        imageURL: "https://picsum.photos/id/1015/600/800",
+        activityLatitude: 37.7544,
+        activityLongitude: -122.4477,
+        visibleToUids: []
+    )
+
+    static let previewNeitherMedia = Poll(
+        id: "pv-empty",
+        question: "Quick standup?",
+        options: [
+            PollOption(id: "y", text: "Yes", count: 1),
+            PollOption(id: "n", text: "No", count: 0)
+        ],
+        activityDate: Date(),
+        activityDescription: nil,
+        imageURL: nil,
+        visibleToUids: []
+    )
+
+    static let previewConfirmed = Poll(
+        id: "pv-confirmed",
+        question: "Dinner Friday?",
+        options: [
+            PollOption(id: "y", text: "Yes", count: 4, sentiment: .positive),
+            PollOption(id: "n", text: "No", count: 1, sentiment: .negative)
+        ],
+        activityDate: Date(),
+        activityDescription: "Italian place downtown.",
+        imageURL: "https://picsum.photos/id/292/600/800",
+        visibleToUids: []
+    )
 }
 
 enum OptionSentimentClassifier {

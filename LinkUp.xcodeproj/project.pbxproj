@@ -26,6 +26,8 @@
 		086A746C2F472900007E69CC /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A746D2F472900007E69CC /* Typography.swift */; };
 		086A7A042F472900007E69CC /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A012F472900007E69CC /* Poll.swift */; };
 		086A7A052F472900007E69CC /* PollCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A022F472900007E69CC /* PollCardView.swift */; };
+		087A8AA12F472900007E69EE /* PollActivityDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */; };
+		087A8AA32F472900007E69EE /* PollCardMediaPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA22F472900007E69EE /* PollCardMediaPager.swift */; };
 		086A7A062F472900007E69CC /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A032F472900007E69CC /* PollsView.swift */; };
 		086A7A0D2F472900007E69CC /* PollService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0B2F472900007E69CC /* PollService.swift */; };
 		086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0C2F472900007E69CC /* CreatePollView.swift */; };
@@ -95,6 +97,8 @@
 		086A746D2F472900007E69CC /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		086A7A012F472900007E69CC /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		086A7A022F472900007E69CC /* PollCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardView.swift; sourceTree = "<group>"; };
+		087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollActivityDateFormatting.swift; sourceTree = "<group>"; };
+		087A8AA22F472900007E69EE /* PollCardMediaPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardMediaPager.swift; sourceTree = "<group>"; };
 		086A7A032F472900007E69CC /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
 		086A7A0B2F472900007E69CC /* PollService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollService.swift; sourceTree = "<group>"; };
 		086A7A0C2F472900007E69CC /* CreatePollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollView.swift; sourceTree = "<group>"; };
@@ -214,7 +218,9 @@
 			isa = PBXGroup;
 			children = (
 				086A7A012F472900007E69CC /* Poll.swift */,
+				087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */,
 				086A7A022F472900007E69CC /* PollCardView.swift */,
+				087A8AA22F472900007E69EE /* PollCardMediaPager.swift */,
 				086A7A032F472900007E69CC /* PollsView.swift */,
 				086A7A0B2F472900007E69CC /* PollService.swift */,
 				086A7A0C2F472900007E69CC /* CreatePollView.swift */,
@@ -426,7 +432,9 @@
 				086A74642F472900007E69CC /* LogInView.swift in Sources */,
 				086A74682F472900007E69CC /* SignUpView.swift in Sources */,
 				086A7A042F472900007E69CC /* Poll.swift in Sources */,
+				087A8AA12F472900007E69EE /* PollActivityDateFormatting.swift in Sources */,
 				086A7A052F472900007E69CC /* PollCardView.swift in Sources */,
+				087A8AA32F472900007E69EE /* PollCardMediaPager.swift in Sources */,
 				086A7A062F472900007E69CC /* PollsView.swift in Sources */,
 				086A7A0D2F472900007E69CC /* PollService.swift in Sources */,
 				086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */,

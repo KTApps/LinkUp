@@ -46,6 +46,8 @@ struct CreatePollView: View {
 
                 photoSection
 
+                mapPinPlaceholderSection
+
                 shareSection
 
                 if let error = errorMessage {
@@ -164,6 +166,41 @@ struct CreatePollView: View {
                 .background(AuthTheme.primary.opacity(0.08))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
+        }
+    }
+
+    private var mapPinPlaceholderSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Location")
+                .font(Typography.subheadlineMedium)
+                .foregroundStyle(AuthTheme.secondary)
+                .padding(.horizontal)
+
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 10) {
+                    Image(systemName: "mappin.and.ellipse")
+                        .font(.system(size: 20))
+                        .foregroundStyle(AuthTheme.accent)
+                    Text("Pin activity on map")
+                        .font(Typography.subheadlineMedium)
+                        .foregroundStyle(AuthTheme.primary)
+                }
+                Text("Coming soon — you’ll drop a pin so friends see where the activity is.")
+                    .font(Typography.subheadline)
+                    .foregroundStyle(AuthTheme.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AuthTheme.primary.opacity(0.06))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .strokeBorder(AuthTheme.primary.opacity(0.12), lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal)
+            .opacity(0.85)
+            .allowsHitTesting(false)
         }
     }
 

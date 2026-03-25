@@ -17,6 +17,8 @@ private struct PollDocument: Encodable {
     let activityDate: Date?
     let activityDescription: String?
     let imageURL: String?
+    let activityLatitude: Double?
+    let activityLongitude: Double?
     let createdBy: String
     let createdAt: Date
     let visibleToUids: [String]
@@ -82,6 +84,8 @@ extension AuthState {
             activityDate: activityDate,
             activityDescription: activityDescription,
             imageURL: imageURL,
+            activityLatitude: nil,
+            activityLongitude: nil,
             createdBy: uid,
             visibleToUids: allVisible
         )
@@ -92,6 +96,8 @@ extension AuthState {
             activityDate: poll.activityDate,
             activityDescription: poll.activityDescription,
             imageURL: poll.imageURL,
+            activityLatitude: poll.activityLatitude,
+            activityLongitude: poll.activityLongitude,
             createdBy: uid,
             createdAt: Date(),
             visibleToUids: allVisible
@@ -146,6 +152,8 @@ extension AuthState {
             activityDate: activityDate,
             activityDescription: activityDescription,
             imageURL: imageURL,
+            activityLatitude: existingPoll.activityLatitude,
+            activityLongitude: existingPoll.activityLongitude,
             createdBy: existingPoll.createdBy,
             visibleToUids: allVisible
         )
@@ -156,6 +164,8 @@ extension AuthState {
             activityDate: updatedPoll.activityDate,
             activityDescription: updatedPoll.activityDescription,
             imageURL: updatedPoll.imageURL,
+            activityLatitude: updatedPoll.activityLatitude,
+            activityLongitude: updatedPoll.activityLongitude,
             createdBy: uid,
             createdAt: Date(),
             visibleToUids: allVisible
@@ -213,6 +223,8 @@ extension AuthState {
             activityDate: poll.activityDate,
             activityDescription: poll.activityDescription,
             imageURL: poll.imageURL,
+            activityLatitude: poll.activityLatitude,
+            activityLongitude: poll.activityLongitude,
             createdBy: poll.createdBy,
             visibleToUids: poll.visibleToUids
         )
