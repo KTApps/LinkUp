@@ -26,7 +26,6 @@ struct PollsView: View {
     @Binding var polls: [Poll]
     @Binding var confirmedPollIds: Set<String>
     var onOpenSettings: () -> Void
-    var onOpenPollHistory: () -> Void
     @State private var selectedPhotoItem: PhotosPickerItem?
     @State private var isUploadingProfileImage = false
     @State private var topCardDragOffset: CGFloat = 0
@@ -407,23 +406,13 @@ struct PollsView: View {
 
                 Spacer()
 
-                HStack(spacing: 12) {
-                    Button {
-                        onOpenPollHistory()
-                    } label: {
-                        Image(systemName: "chart.bar.fill")
-                            .font(.system(size: 22))
-                    }
-                    .buttonStyle(HeaderIconButtonStyle())
-
-                    Button {
-                        onOpenSettings()
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(.system(size: 22))
-                    }
-                    .buttonStyle(HeaderIconButtonStyle())
+                Button {
+                    onOpenSettings()
+                } label: {
+                    Image(systemName: "gearshape.fill")
+                        .font(.system(size: 22))
                 }
+                .buttonStyle(HeaderIconButtonStyle())
             }
             .overlay {
                 HStack(spacing: 0) {
@@ -544,8 +533,7 @@ private struct ProfileImageData: Transferable {
             authState: AuthState(),
             polls: .constant(HardcodedPolls.sample),
             confirmedPollIds: .constant([]),
-            onOpenSettings: {},
-            onOpenPollHistory: {}
+            onOpenSettings: {}
         )
     }
 }

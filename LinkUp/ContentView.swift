@@ -9,43 +9,40 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-/// Route for pushed pages (not sheets). Bar chart opens History.
-private enum AppRoute: Hashable {
-    case history
-}
-
-/// Main app view when the user is logged in. Polls is the root; Messages, Plus, and Calendar open as sheets (back button or swipe down to return).
+/// Main app view when the user is logged in. Polls is the root; bottom bar opens sheets (back or swipe down to dismiss).
 struct ContentView: View {
     @ObservedObject var authState: AuthState
     @State private var polls: [Poll] = []
     @State private var presentedSheet: AppSheet?
-    @State private var navigationPath: [AppRoute] = []
     @State private var pollsListener: ListenerRegistration?
     @State private var confirmedPollIds: Set<String> = []
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationStack {
             PollsView(
                 authState: authState,
                 polls: $polls,
                 confirmedPollIds: $confirmedPollIds,
-                onOpenSettings: { presentedSheet = .settings },
-                onOpenPollHistory: { navigationPath.append(.history) }
+                onOpenSettings: { presentedSheet = .settings }
             )
                 .toolbarBackground(AuthTheme.background, for: .navigationBar)
                 .toolbarColorScheme(.dark, for: .navigationBar)
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     bottomBar
                 }
-                .navigationDestination(for: AppRoute.self) { route in
-                    switch route {
-                    case .history:
-                        PollHistoryView(authState: authState, polls: polls)
-                    }
-                }
         }
         .sheet(item: $presentedSheet) { sheet in
-            sheetContent(for: sheet)
+            if sheet == .history {
+                NavigationStack {
+                    PollHistoryView(authState: authState, polls: polls)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(AuthTheme.background)
+                }
+                .presentationDetents([.fraction(0.75)])
+                .presentationDragIndicator(.visible)
+            } else {
+                sheetContent(for: sheet)
+            }
         }
         .onAppear {
             // Use Firebase Auth UID so the listener attaches as soon as the user is signed in,
@@ -82,6 +79,7 @@ struct ContentView: View {
             barButton(title: "Messages", image: "paperplane.fill", sheet: .messages)
             barButton(title: "Plus", image: "plus.circle.fill", sheet: .plus)
             barButton(title: "Calendar", image: "calendar", sheet: .calendar)
+            barButton(title: "History", image: "chart.bar.fill", sheet: .history)
         }
         .padding(.vertical, 15)
         .background(AuthTheme.background)
@@ -130,14 +128,17 @@ struct ContentView: View {
             SheetHost(title: "Settings") {
                 SettingsView(authState: authState)
             }
+        case .history:
+            EmptyView()
         }
     }
 }
 
-private enum AppSheet: String, Identifiable {
+private enum AppSheet: String, Identifiable, Equatable {
     case messages
     case plus
     case calendar
+    case history
     case settings
     var id: String { rawValue }
 }

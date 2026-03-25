@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-/// History page: list of all polls as "Title - N votes" with bar chart icon per row. Pushed when user taps bar chart in Polls header. Title "History"; settings icon opens Settings sheet.
+/// History page: list of all polls as "Title - N votes" with bar chart icon per row. Opened from the bottom bar History tab as a sheet (3/4 height). Title "History"; settings icon opens Settings sheet.
 private struct ChartSheetItem: Identifiable {
     let poll: Poll
     var id: String { poll.id }
