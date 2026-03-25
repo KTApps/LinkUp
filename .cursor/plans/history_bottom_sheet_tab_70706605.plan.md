@@ -29,7 +29,7 @@ isProject: false
 - **No** bar chart (or history) control in the polls header — only profile, wordmark, and settings remain on the right cluster (remove the chart button and its `HStack` spacing if it becomes a single settings button).
 - **New** bottom bar item (same pattern as Messages / Plus / Calendar): label **History**, SF Symbol `**chart.bar.fill`** (keeps the same metaphor as before).
 - Tapping it sets `presentedSheet = .history` (extend [AppSheet](LinkUp/ContentView.swift) with a `history` case).
-- Sheet content: reuse `**PollHistoryView(authState:polls:)`** inside a `**NavigationStack**` so its existing `.navigationTitle("History")`, `< Back` (`dismiss()`), settings toolbar, and nested chart sheet keep working.
+- Sheet content: reuse `**PollHistoryView(authState:polls:)`** inside a `**NavigationStack`** so its existing `.navigationTitle("History")`, `< Back` (`dismiss()`), settings toolbar, and nested chart sheet keep working.
 - Apply `**.presentationDetents([.fraction(0.75)])**` and `**.presentationDragIndicator(.visible)**` on the **history** sheet only so it opens at **3/4 height** and can be dragged (other sheets stay default full-screen unless you choose otherwise).
 
 Implementation note: because detents differ per sheet type, use a `**switch` on `sheet`** in the `.sheet(item:)` closure (or a small helper) so only the history branch gets the detent modifiers; other cases stay unchanged.

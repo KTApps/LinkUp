@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Poll confirm button — layout ideas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #000000;
+      --primary: #ffffff;
+      --secondary: rgba(255, 255, 255, 0.6);
+      --accent: #00d4ff;
+      --option-muted: rgba(255, 255, 255, 0.15);
+      --card-w: 320px;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 32px 20px 48px;
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: #0a0a0a;
+      color: var(--primary);
+      line-height: 1.4;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    .intro {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      max-width: 52ch;
+      margin-bottom: 28px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--card-w), 1fr));
+      gap: 28px;
+      align-items: start;
+    }
+    .tile {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 14px 14px 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .tile h2 {
+      margin: 0 0 12px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+    .tile p.hint {
+      margin: 10px 0 0;
+      font-size: 0.75rem;
+      color: var(--secondary);
+      line-height: 1.35;
+    }
+    /* Fake bottom overlay strip */
+    .mock-card {
+      width: 100%;
+      max-width: var(--card-w);
+      background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.82));
+      border-radius: var(--radius);
+      padding: 14px 12px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .votes-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 12px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+    }
+    .votes-row::before {
+      content: "";
+      width: 3px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+    .options {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .opt {
+      flex: 1;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      font-weight: 600;
+    }
+    .opt.on {
+      background: var(--accent);
+      color: #000;
+    }
+    .opt.off {
+      background: var(--option-muted);
+      color: var(--primary);
+    }
+    /* Variants */
+    .btn-current {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      background: rgba(0, 212, 255, 0.9);
+      color: #000;
+      border: none;
+    }
+    .btn-ghost {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    .link-confirm {
+      display: block;
+      text-align: center;
+      padding: 6px 0 4px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .row-trailing {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .btn-pill {
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(0, 212, 255, 0.55);
+    }
+    .row-icon {
+      display: flex;
+      justify-content: center;
+      padding: 4px 0;
+    }
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+    .row-split {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 2px;
+    }
+    .helper {
+      font-size: 0.75rem;
+      color: var(--secondary);
+      flex: 1;
+      min-width: 0;
+    }
+    .btn-small {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(0, 212, 255, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(0, 212, 255, 0.4);
+    }
+    .inline-row {
+      margin-top: 6px;
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 0.75rem;
+    }
+    .inline-row span {
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .inline-row a {
+      color: var(--accent);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .confirmed-muted {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      border-radius: var(--radius);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--secondary);
+    }
+    footer {
+      margin-top: 36px;
+      font-size: 0.75rem;
+      color: var(--secondary);
+    }
+  </style>
+</head>
+<body>
+  <h1>Poll card — confirm control mockups</h1>
+  <p class="intro">
+    Same LinkUp palette: black overlay, white text, cyan accent. Each tile shows a voted state (Yes selected) plus one confirm pattern. Open this file in a browser to compare.
+  </p>
+
+  <div class="grid">
+    <div class="tile">
+      <h2>1. Current (reference)</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="btn-current">Confirm</div>
+      </div>
+      <p class="hint">Full-width filled accent — strongest visual weight; matches your shipped SwiftUI style.</p>
+    </div>
+
+    <div class="tile">
+      <h2>2. Ghost / outline</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="btn-ghost">Confirm</div>
+      </div>
+      <p class="hint">Same width as now, but reads secondary to the solid option chips.</p>
+    </div>
+
+    <div class="tile">
+      <h2>3. Text link</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <span class="link-confirm">Lock in choice</span>
+      </div>
+      <p class="hint">Lowest chrome; label can stay “Confirm” or softer copy.</p>
+    </div>
+
+    <div class="tile">
+      <h2>4. Trailing pill</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="row-trailing">
+          <span class="btn-pill">Confirm</span>
+        </div>
+      </div>
+      <p class="hint">Doesn’t span the card; feels like a finishing action, not a second hero button.</p>
+    </div>
+
+    <div class="tile">
+      <h2>5. Icon (check)</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="row-icon">
+          <div class="icon-btn" title="Confirm">✓</div>
+        </div>
+      </div>
+      <p class="hint">Pair with VoiceOver label “Confirm vote”. Very quiet visually.</p>
+    </div>
+
+    <div class="tile">
+      <h2>6. Helper + compact</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="row-split">
+          <span class="helper">You picked <strong style="color:var(--primary)">Yes</strong></span>
+          <span class="btn-small">Confirm</span>
+        </div>
+      </div>
+      <p class="hint">Context on the left, small confirm on the right — clear hierarchy.</p>
+    </div>
+
+    <div class="tile">
+      <h2>7. Inline bar</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on">Yes ✓</div>
+          <div class="opt off">No</div>
+        </div>
+        <div class="inline-row">
+          <span>Choice: Yes</span>
+          <a href="#">Confirm</a>
+        </div>
+      </div>
+      <p class="hint">Ties confirm to the selection in one row; link-style tap target on the right.</p>
+    </div>
+
+    <div class="tile">
+      <h2>8. After confirm (muted)</h2>
+      <div class="mock-card">
+        <div class="votes-row">42 votes</div>
+        <div class="options">
+          <div class="opt on" style="opacity:0.55">Yes ✓</div>
+          <div class="opt off" style="opacity:0.55">No</div>
+        </div>
+        <div class="confirmed-muted">Confirmed</div>
+      </div>
+      <p class="hint">Subtle post-state: matches idea of quiet unconfirmed + clearer “done” feedback (can mix with any unconfirmed style).</p>
+    </div>
+  </div>
+
+  <footer>
+    File: <code style="color:var(--accent)">.cursor/mockups/poll-confirm-button-mockups.html</code> — static only; not wired to the app.
+  </footer>
+</body>
+</html>

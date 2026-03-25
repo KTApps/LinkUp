@@ -196,7 +196,7 @@ struct PollCardView: View {
             confirmButton
             progressBarView
             if total > 0 {
-                percentagesCaption
+                labeledResultsCaption
             }
         }
         .padding(.horizontal, 16)
@@ -269,17 +269,25 @@ struct PollCardView: View {
         Button {
             onConfirm?(poll.id)
         } label: {
-            Text(isConfirmed ? "Confirmed" : "Confirm")
-                .font(Typography.subheadlineSemibold)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 10)
-                .background(isConfirmed ? AuthTheme.primary.opacity(0.2) : AuthTheme.accent.opacity(0.9))
-                .foregroundStyle(isConfirmed ? AuthTheme.secondary : AuthTheme.background)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+            Group {
+                if isConfirmed {
+                    Text("Confirmed")
+                        .font(Typography.subheadlineSemibold)
+                        .foregroundStyle(AuthTheme.secondary)
+                } else {
+                    Text("Lock in choice")
+                        .font(Typography.subheadlineSemibold)
+                        .foregroundStyle(AuthTheme.accent)
+                        .underline(true, color: AuthTheme.accent)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .disabled(isConfirmed || selectedOptionId == nil)
-        .opacity((isConfirmed || selectedOptionId == nil) ? 0.7 : 1)
+        .opacity((!isConfirmed && selectedOptionId == nil) ? 0.7 : 1)
     }
 
     private var progressBarView: some View {
@@ -300,13 +308,25 @@ struct PollCardView: View {
         .animation(progressAnimation, value: poll.options.map(\.count))
     }
 
-    private var percentagesCaption: some View {
+    private var labeledResultsCaption: some View {
         HStack(spacing: 8) {
             ForEach(poll.options) { option in
                 let pct = total > 0 ? Int(round(Double(option.count) / Double(total) * 100)) : 0
-                Text("\(pct)%")
-                    .font(Typography.subheadline)
-                    .foregroundStyle(AuthTheme.secondary)
+                HStack(spacing: 4) {
+                    Text(option.text)
+                        .font(Typography.subheadlineSemibold)
+                        .foregroundStyle(AuthTheme.primary)
+                    Text("·")
+                        .font(Typography.subheadline)
+                        .foregroundStyle(AuthTheme.secondary)
+                    Text("\(pct)%")
+                        .font(Typography.subheadline)
+                        .foregroundStyle(AuthTheme.secondary)
+                }
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
             }
         }
     }
