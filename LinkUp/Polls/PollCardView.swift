@@ -53,10 +53,13 @@ struct PollCardView: View {
                 )
 
                 if showOverlays {
-                    VStack(spacing: 0) {
-                        topOverlay
-                        middleHitArea
-                        bottomOverlay
+                    ZStack(alignment: .bottom) {
+                        bottomImageScrim
+                        VStack(spacing: 0) {
+                            topOverlay
+                            middleHitArea
+                            bottomOverlay
+                        }
                     }
                     .transition(.opacity)
                 }
@@ -202,13 +205,28 @@ struct PollCardView: View {
         .padding(.horizontal, 16)
         .padding(.top, 16)
         .padding(.bottom, 16)
-        .background(
-            LinearGradient(
-                colors: [Color.clear, Color.black.opacity(0.5), Color.black.opacity(0.82)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
+        .background(Color.clear)
+    }
+
+    private var bottomImageScrim: some View {
+        GeometryReader { geo in
+            let scrimHeight = geo.size.height * 0.60
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+                LinearGradient(
+                    stops: [
+                        .init(color: .black.opacity(0), location: 0),
+                        .init(color: .black.opacity(0.48), location: 0.22),
+                        .init(color: .black.opacity(0.82), location: 0.55),
+                        .init(color: .black.opacity(0.98), location: 1)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: scrimHeight)
+            }
+        }
+        .allowsHitTesting(false)
     }
 
     private var optionsView: some View {
