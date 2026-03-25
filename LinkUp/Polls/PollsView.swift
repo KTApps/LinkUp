@@ -9,8 +9,8 @@ import UIKit
 import UniformTypeIdentifiers
 import FirebaseFirestore
 
-private let headerBarHeight: CGFloat = 20
-private let headerBottomPadding: CGFloat = 0
+private let headerBarHeight: CGFloat = 56
+private let headerBottomPadding: CGFloat = 2
 
 /// Main poll page: one poll per page; swipe top card to send to back.
 private let deckHorizontalPadding: CGFloat = 16
@@ -41,76 +41,76 @@ struct PollsView: View {
     @State private var confirmationsListener: ListenerRegistration?
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .top) {
+        // `NavigationStack` already applies the top safe area; don’t add `safeAreaInsets.top` again on the header or deck.
+        VStack(spacing: 0) {
+            pollsHeader
+            GeometryReader { geometry in
                 deckContent(geometry: geometry)
-
-                pollsHeader(safeAreaTop: geometry.safeAreaInsets.top)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(AuthTheme.background)
-            .toolbar(.hidden, for: .navigationBar)
-            .overlay {
-                if let poll = pollForMoreDetails {
-                    moreDetailsOverlay(poll: poll)
-                        .transition(.asymmetric(
-                            insertion: .opacity.combined(with: .scale(scale: 0.94)),
-                            removal: .opacity.combined(with: .scale(scale: 0.94))
-                        ))
-                }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(AuthTheme.background)
+        .toolbar(.hidden, for: .navigationBar)
+        .overlay {
+            if let poll = pollForMoreDetails {
+                moreDetailsOverlay(poll: poll)
+                    .transition(.asymmetric(
+                        insertion: .opacity.combined(with: .scale(scale: 0.94)),
+                        removal: .opacity.combined(with: .scale(scale: 0.94))
+                    ))
             }
-            .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
-            .task(id: polls.map(\.id)) {
-                await loadMyVotes()
-            }
-            .onAppear {
-                attachConfirmationsListener()
-            }
-            .onDisappear {
-                confirmationsListener?.remove()
-                confirmationsListener = nil
-            }
-            .sheet(item: $pollForOwnerSheet) { poll in
-                pollOwnerActionsSheet(poll: poll)
-            }
-            .sheet(item: $pollForEdit) { poll in
-                NavigationStack {
-                    CreatePollView(authState: authState, existingPoll: poll) { updatedPoll in
-                        if let i = polls.firstIndex(where: { $0.id == updatedPoll.id }) {
-                            polls[i] = updatedPoll
-                        }
-                        pollForEdit = nil
+        }
+        .animation(.easeOut(duration: 0.4), value: pollForMoreDetails?.id)
+        .task(id: polls.map(\.id)) {
+            await loadMyVotes()
+        }
+        .onAppear {
+            attachConfirmationsListener()
+        }
+        .onDisappear {
+            confirmationsListener?.remove()
+            confirmationsListener = nil
+        }
+        .sheet(item: $pollForOwnerSheet) { poll in
+            pollOwnerActionsSheet(poll: poll)
+        }
+        .sheet(item: $pollForEdit) { poll in
+            NavigationStack {
+                CreatePollView(authState: authState, existingPoll: poll) { updatedPoll in
+                    if let i = polls.firstIndex(where: { $0.id == updatedPoll.id }) {
+                        polls[i] = updatedPoll
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(AuthTheme.background)
-                    .navigationTitle("Edit Poll")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbarBackground(AuthTheme.background, for: .navigationBar)
-                    .toolbarColorScheme(.dark, for: .navigationBar)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("< Back") {
-                                pollForEdit = nil
-                            }
-                            .foregroundStyle(AuthTheme.accent)
+                    pollForEdit = nil
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(AuthTheme.background)
+                .navigationTitle("Edit Poll")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(AuthTheme.background, for: .navigationBar)
+                .toolbarColorScheme(.dark, for: .navigationBar)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("< Back") {
+                            pollForEdit = nil
                         }
+                        .foregroundStyle(AuthTheme.accent)
                     }
                 }
             }
-            .alert("Delete poll?", isPresented: .init(
-                get: { pollToDeleteForConfirmation != nil },
-                set: { if !$0 { pollToDeleteForConfirmation = nil } }
-            )) {
-                Button("Cancel", role: .cancel) {
-                    pollToDeleteForConfirmation = nil
-                }
-                Button("Delete", role: .destructive) {
-                    confirmDeletePoll()
-                }
-            } message: {
-                if pollToDeleteForConfirmation != nil {
-                    Text("This poll will be permanently deleted.")
-                }
+        }
+        .alert("Delete poll?", isPresented: .init(
+            get: { pollToDeleteForConfirmation != nil },
+            set: { if !$0 { pollToDeleteForConfirmation = nil } }
+        )) {
+            Button("Cancel", role: .cancel) {
+                pollToDeleteForConfirmation = nil
+            }
+            Button("Delete", role: .destructive) {
+                confirmDeletePoll()
+            }
+        } message: {
+            if pollToDeleteForConfirmation != nil {
+                Text("This poll will be permanently deleted.")
             }
         }
     }
@@ -292,13 +292,11 @@ struct PollsView: View {
         let activeIndices = polls.indices.filter { !confirmedPollIds.contains(polls[$0].id) }
         let activeCount = activeIndices.count
         let width = geometry.size.width
-        let contentTop = max(0, headerBarHeight + headerBottomPadding + geometry.safeAreaInsets.top - 20)
 
         Group {
             if activeCount == 0 {
                 emptyDeckView
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(.top, contentTop)
                     .padding(.bottom, deckBottomPadding)
             } else {
                 let topCardRotation = Double(topCardDragOffset) * cardRotationPerPoint
@@ -321,7 +319,6 @@ struct PollsView: View {
                         )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
-                            .padding(.top, contentTop)
                             .padding(.bottom, deckBottomPadding)
                             .opacity(topCardDragOffset < 0 ? underlyingOpacity : 0)
                             .allowsHitTesting(false)
@@ -338,7 +335,6 @@ struct PollsView: View {
                         )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.horizontal, deckHorizontalPadding)
-                            .padding(.top, contentTop)
                             .padding(.bottom, deckBottomPadding)
                             .opacity(topCardDragOffset > 0 ? underlyingOpacity : 0)
                             .allowsHitTesting(false)
@@ -357,7 +353,6 @@ struct PollsView: View {
                     }, onVote: handleVote, onConfirm: handleConfirm, isConfirmed: confirmedPollIds.contains(polls[topIndex].id))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .padding(.horizontal, deckHorizontalPadding)
-                        .padding(.top, contentTop)
                         .padding(.bottom, deckBottomPadding)
                         .offset(x: topCardDragOffset)
                         .rotation3DEffect(
@@ -438,53 +433,59 @@ struct PollsView: View {
         .padding()
     }
 
-    /// Wordmark asset (Link white / Up cyan) beside username, before chart/settings.
-    private var linkUpHeaderLogo: some View {
-        Image("LinkUpLogo")
-            .resizable()
-            .scaledToFit()
-            .frame(height: 20)
-            .accessibilityLabel("LinkUp")
-    }
-
-    private func pollsHeader(safeAreaTop: CGFloat) -> some View {
+    /// Above the deck in a `VStack`. Top inset comes from the system (`NavigationStack`); no manual safe-area padding.
+    private var pollsHeader: some View {
         VStack(spacing: 0) {
             HStack(spacing: 10) {
-                profileImageButton
+                HStack(spacing: 10) {
+                    profileImageButton
 
-                Text(authState.currentUser?.username ?? "username")
-                    .font(.subheadline)
-                    .foregroundStyle(AuthTheme.primary)
-
-                linkUpHeaderLogo
+                    Text(authState.currentUser?.username ?? "username")
+                        .font(.subheadline)
+                        .foregroundStyle(AuthTheme.primary)
+                }
 
                 Spacer()
 
-                Button {
-                    onOpenPollHistory()
-                } label: {
-                    Image(systemName: "chart.bar.fill")
-                        .font(.system(size: 22))
-                }
-                .buttonStyle(HeaderIconButtonStyle())
+                HStack(spacing: 12) {
+                    Button {
+                        onOpenPollHistory()
+                    } label: {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.system(size: 22))
+                    }
+                    .buttonStyle(HeaderIconButtonStyle())
 
-                Button {
-                    onOpenSettings()
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 22))
+                    Button {
+                        onOpenSettings()
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .font(.system(size: 22))
+                    }
+                    .buttonStyle(HeaderIconButtonStyle())
                 }
-                .buttonStyle(HeaderIconButtonStyle())
+            }
+            .overlay {
+                HStack(spacing: 0) {
+                    Text("Link")
+                        .foregroundStyle(AuthTheme.primary)
+                    Text("Up")
+                        .foregroundStyle(AuthTheme.accent)
+                }
+                .font(.title.weight(.bold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("LinkUp")
+                .accessibilityAddTraits(.isHeader)
             }
             .padding(.horizontal, 16)
             .frame(height: headerBarHeight)
-            .padding(.top, safeAreaTop)
             .padding(.bottom, headerBottomPadding)
             .background(AuthTheme.background)
         }
         .frame(maxWidth: .infinity, alignment: .top)
         .background(AuthTheme.background)
-        .ignoresSafeArea(edges: .top)
         .onChange(of: selectedPhotoItem) { _, newItem in
             Task {
                 await handleSelectedPhotoItem(newItem)

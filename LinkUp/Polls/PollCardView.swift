@@ -25,8 +25,8 @@ struct PollCardView: View {
     var body: some View {
         ZStack(alignment: .topTrailing) {
             GeometryReader { geometry in
-                let titleY = geometry.size.height * 0.22
-                let centerY = geometry.size.height * 0.5
+                let titleY = geometry.size.height * 0.14
+                let centerY = geometry.size.height * 0.47
 
                 ZStack(alignment: .top) {
                     titleBlock
