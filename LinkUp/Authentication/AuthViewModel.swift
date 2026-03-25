@@ -10,6 +10,17 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 
+// MARK: - Profile sync (restore vs transient errors)
+
+private enum UserProfileSyncResult {
+    /// `AuthenticationData` loaded into `currentUser`.
+    case loaded
+    /// Document missing or wrong shape — account not in Firestore.
+    case missingProfile
+    /// Network or other fetch error — do not sign out on restore.
+    case fetchFailed(Error)
+}
+
 // MARK: - Sign up, log in, listen for user
 
 extension AuthState {
@@ -58,7 +69,14 @@ extension AuthState {
         do {
             let result = try await authRef.signIn(withEmail: email, password: password)
             userSession = result.user
-            await listenForUser()
+            let profileResult = await syncUserProfileFromFirestore()
+            switch profileResult {
+            case .loaded:
+                break
+            case .missingProfile, .fetchFailed:
+                signOut()
+                logInError = true
+            }
         } catch {
             logInError = true
         }
@@ -72,32 +90,53 @@ extension AuthState {
     }
 
     /// Restore session on app launch (e.g. from persisted Firebase Auth). Call from root view .onAppear.
+    /// Signs out if the Auth user no longer exists on the server or the Firestore profile is gone (not on network errors).
     func restoreSession() async {
         guard let user = authRef.currentUser else { return }
         userSession = user
-        await listenForUser()
+        do {
+            try await user.reloadAsync()
+        } catch {
+            // Offline / network: keep persisted session. Only sign out when the server says the user is gone.
+            if isFirebaseAuthUserRecordMissing(error) {
+                signOut()
+                return
+            }
+        }
+        let profileResult = await syncUserProfileFromFirestore()
+        switch profileResult {
+        case .loaded, .fetchFailed:
+            break
+        case .missingProfile:
+            signOut()
+        }
     }
 
     /// Load current user profile from Firestore into `currentUser`. Call after sign up or log in.
     func listenForUser() async {
-        guard let uid = authRef.currentUser?.uid else { return }
+        _ = await syncUserProfileFromFirestore()
+    }
+
+    /// Fetches `users/<uid>` and updates `currentUser` when valid.
+    fileprivate func syncUserProfileFromFirestore() async -> UserProfileSyncResult {
+        guard let uid = authRef.currentUser?.uid else { return .missingProfile }
 
         let userRef = databaseRef.collection("users").document(uid)
         do {
             let document = try await userRef.getDocument()
             guard document.exists, let data = document.data(),
                   let authData = data["AuthenticationData"] as? [String: Any] else {
-                return
+                return .missingProfile
             }
             let decoded = try Firestore.Decoder().decode(AuthModel.self, from: authData)
             currentUser = decoded
-            // Keep usernames in sync so search/add-friends can show this user's profile photo.
             if let url = decoded.profileImageURL {
                 let normalizedUsername = decoded.username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
                 try? await databaseRef.collection("usernames").document(normalizedUsername).updateData(["profileImageURL": url])
             }
+            return .loaded
         } catch {
-            // Non-fatal: UI can still show session
+            return .fetchFailed(error)
         }
     }
 
@@ -143,5 +182,34 @@ extension AuthState {
         try await user.delete()
         userSession = nil
         currentUser = nil
+    }
+}
+
+// MARK: - Firebase Auth
+
+private extension User {
+    func reloadAsync() async throws {
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            self.reload { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume()
+                }
+            }
+        }
+    }
+}
+
+/// True when `reload()` failed because the Auth user no longer exists (or is disabled), not for network errors.
+private func isFirebaseAuthUserRecordMissing(_ error: Error) -> Bool {
+    let ns = error as NSError
+    guard ns.domain == AuthErrorDomain,
+          let code = AuthErrorCode.Code(rawValue: ns.code) else { return false }
+    switch code {
+    case .userNotFound, .userDisabled:
+        return true
+    default:
+        return false
     }
 }

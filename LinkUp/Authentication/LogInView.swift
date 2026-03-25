@@ -21,9 +21,15 @@ struct LogInView: View {
                 VStack(spacing: geometry.size.height * 0.03) {
                     ScrollView {
                         VStack(spacing: geometry.size.height * 0.03) {
-                            Text("LinkUp")
-                                .font(Typography.title)
-                                .foregroundStyle(AuthTheme.primary)
+                            HStack(spacing: 0) {
+                                Text("Link")
+                                    .foregroundStyle(AuthTheme.primary)
+                                Text("Up")
+                                    .foregroundStyle(AuthTheme.accent)
+                            }
+                            .font(Typography.title)
+                            .accessibilityElement(children: .combine)
+                            .accessibilityLabel("LinkUp")
 
                             VStack(spacing: geometry.size.height * 0.02) {
                                 Input(text: $email, title: "Email", placeholder: "name@example.com")
