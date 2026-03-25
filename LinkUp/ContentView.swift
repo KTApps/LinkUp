@@ -122,7 +122,7 @@ struct ContentView: View {
             }
         case .calendar:
             SheetHost(title: "Calendar") {
-                CalendarView(authState: authState, confirmedPollIds: $confirmedPollIds)
+                CalendarView(authState: authState)
             }
         case .settings:
             SheetHost(title: "Settings") {

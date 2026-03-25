@@ -362,6 +362,7 @@ extension AuthState {
             .getDocuments()
         for response in responses.documents {
             let recipientUid = response.documentID
+            guard recipientUid != actorUid else { continue }
             let docId = UUID().uuidString
             let payload: [String: Any] = [
                 "id": docId,

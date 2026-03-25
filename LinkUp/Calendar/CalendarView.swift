@@ -20,7 +20,6 @@ private var monthYearFormatter: DateFormatter {
 /// Scrollable calendar showing multiple months (1–2 visible at a time). Display-only; AuthTheme.
 struct CalendarView: View {
     @ObservedObject var authState: AuthState
-    @Binding var confirmedPollIds: Set<String>
     private let calendar = Calendar.current
     @State private var myConfirmations: [PollConfirmation] = []
     @State private var confirmationRates: [String: Double] = [:]
@@ -231,13 +230,11 @@ struct CalendarView: View {
             await MainActor.run {
                 myConfirmations = confirmations
                 confirmationRates = rates
-                confirmedPollIds = Set(confirmations.map(\.pollId))
             }
         } catch {
             await MainActor.run {
                 myConfirmations = []
                 confirmationRates = [:]
-                confirmedPollIds = []
             }
         }
     }
@@ -251,6 +248,6 @@ private extension Calendar {
 }
 
 #Preview {
-    CalendarView(authState: AuthState(), confirmedPollIds: .constant([]))
+    CalendarView(authState: AuthState())
         .background(AuthTheme.background)
 }
