@@ -1,6 +1,6 @@
 # Literature Review
 
-## What is already known about the problem?
+## The everyday problems of group scheduling
 
 Coordinating social plans in a group is rarely as simple as 'find a time everyone is free'. A diary study by Schuler et al. (2014) shows that everyday social coordination is typically managed through open channel communication (e.g. texting, calls and email) because it feels flexible and natural for negotiating plans. However, this often leads to 'conversational overload' and a disparity of work, where one or two people take on the burden of chasing replies, summarising decisions and keeping everyone aligned as details change over time (Schuler et al. 2014). This highlights that the main challenge is not only identifying a suitable slot, but sustaining progress toward a shared decision across fragmented conversations and uneven participation.
 
@@ -12,7 +12,7 @@ When combined, the literature frames group scheduling as ongoing coordination wo
 
 ---
 
-## What solutions have been tried and how well did they work?
+## Common tools people use to coordinate
 
 A common approach to group scheduling is poll based coordination, where one person proposes a shortlist of candidate times and invitees indicate which options they can attend. Doodle is a well known example where participants respond to proposed slots by marking 'yes', 'no' or an 'if need be' option that captures secondary flexibility. This structure can reduce the messiness of open ended chat because it turns replies into a visible table of options. However, it still depends on the organiser selecting 'good' candidate times in advance and on participants actually responding. If responses are late or incomplete, the poll does not resolve the underlying coordination problem, it just records whatever responses you managed to get.
 
@@ -28,7 +28,7 @@ Overall, these tools show clear progress. For example: polls structure responses
 
 ---
 
-## What design constraints matter from literature?
+## Adoption, privacy and visibility in scheduling tools
 
 Designing group scheduling tools is constrained in 3 areas: adoption, privacy and social pressure. On adoption, a Computer Supported Cooperative Work (CSCW) analysis by Grudin (1988) argues that many collaborative systems fail because there is often a 'disparity' between who benefits and who must do extra work to keep the system running. He illustrates this with automatic meeting scheduling. If a system relies on everyone keeping their calendars up to date, it stops working as soon as people fail to maintain them. Without broad participation, the scheduler becomes ineffective (Grudin, 1988). This implies that even a well designed feature won't help if it requires new habits that only some people follow.
 
@@ -38,7 +38,7 @@ Finally, the literature warns that making availability highly visible can create
 
 ---
 
-## What gap remains in research/tools?
+## What existing tools still fail to fix
 
 A clear gap in current tools is that they often support only one part of group scheduling, rather than the full journey from an uncertain conversation to a confirmed plan. Availability grids can make overlaps visible and polls can collect preferences, but neither necessarily helps a group move from 'we should catch up' to 'this is the agreed time' without returning to messaging to negotiate, chase replies and confirm the outcome. This matters because social scheduling is not just slot finding, but it involves ongoing coordination work and uneven participation, where someone typically has to keep the process moving (Schuler et al. 2014).
 
@@ -50,7 +50,7 @@ Against this background, the unique angle of my approach is an end to end workfl
 
 ---
 
-## How does that gap justify an MVP + evaluation plan?
+## Building and evaluating the proposed solution
 
 The gaps identified in existing tools justify an MVP that prioritises an end to end coordination loop rather than a single feature. Because social scheduling involves ongoing coordination work that is often unevenly distributed (Schuler et al. 2014; Grudin, 1988), the MVP should focus on a workflow where users enter availability, the system surfaces the best overlaps, the group can vote or confirm a small set of workable choices and the outcome is locked in and visible so it does not rely on memory or repeated chat follow ups. This directly addresses the practical reality that tools fail when they require heavy manual chasing or assume everyone will behave consistently (Grudin, 1988).
 

@@ -14,28 +14,33 @@
 		080FD12D2F4723730022AA9D /* LinkUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD12C2F4723730022AA9D /* LinkUpTests.swift */; };
 		080FD1372F4723740022AA9D /* LinkUpUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1362F4723740022AA9D /* LinkUpUITests.swift */; };
 		080FD1392F4723740022AA9D /* LinkUpUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */; };
-		086A74702F472900007E69CC /* AuthTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74712F472900007E69CC /* AuthTheme.swift */; };
+		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
+		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
+		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
+		080FD14D2F47263F0022AA9D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14C2F47263F0022AA9D /* FirebaseFirestore */; };
+		080FD14F2F47263F0022AA9D /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14E2F47263F0022AA9D /* FirebaseFirestoreSwift */; };
+		080FD1512F47263F0022AA9D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1502F47263F0022AA9D /* FirebaseStorage */; };
+		086A745B2F472889007E69CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086A745A2F472889007E69CC /* GoogleService-Info.plist */; };
 		086A745C2F472900007E69CC /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745E2F472900007E69CC /* AuthModel.swift */; };
 		086A745D2F472900007E69CC /* AuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A745F2F472900007E69CC /* AuthState.swift */; };
 		086A74602F472900007E69CC /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74612F472900007E69CC /* AuthViewModel.swift */; };
-		086A74642F472900007E69CC /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74652F472900007E69CC /* LogInView.swift */; };
 		086A74622F472900007E69CC /* StartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74632F472900007E69CC /* StartView.swift */; };
+		086A74642F472900007E69CC /* LogInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74652F472900007E69CC /* LogInView.swift */; };
 		086A74662F472900007E69CC /* Input.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74672F472900007E69CC /* Input.swift */; };
 		086A74682F472900007E69CC /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74692F472900007E69CC /* SignUpView.swift */; };
 		086A746A2F472900007E69CC /* GeometryReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A746B2F472900007E69CC /* GeometryReader.swift */; };
 		086A746C2F472900007E69CC /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A746D2F472900007E69CC /* Typography.swift */; };
+		086A74702F472900007E69CC /* AuthTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A74712F472900007E69CC /* AuthTheme.swift */; };
 		086A7A042F472900007E69CC /* Poll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A012F472900007E69CC /* Poll.swift */; };
 		086A7A052F472900007E69CC /* PollCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A022F472900007E69CC /* PollCardView.swift */; };
-		087A8AA12F472900007E69EE /* PollActivityDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */; };
-		087A8AA32F472900007E69EE /* PollCardMediaPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA22F472900007E69EE /* PollCardMediaPager.swift */; };
 		086A7A062F472900007E69CC /* PollsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A032F472900007E69CC /* PollsView.swift */; };
+		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
 		086A7A0D2F472900007E69CC /* PollService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0B2F472900007E69CC /* PollService.swift */; };
 		086A7A0E2F472900007E69CC /* CreatePollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0C2F472900007E69CC /* CreatePollView.swift */; };
 		086A7A102F472900007E69CC /* MoreDetailsPopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */; };
 		086A7A122F472900007E69CC /* PollHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A112F472900007E69CC /* PollHistoryView.swift */; };
 		086A7A142F472900007E69CC /* PollResultsChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A132F472900007E69CC /* PollResultsChartView.swift */; };
 		086A7A162F472900007E69CC /* PollOptionVotersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A152F472900007E69CC /* PollOptionVotersView.swift */; };
-		086A7A092F472900007E69CC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7A0A2F472900007E69CC /* SettingsView.swift */; };
 		086A7B132F472900007E69CC /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B122F472900007E69CC /* CalendarView.swift */; };
 		086A7B202F472900007E69CC /* FriendModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B1E2F472900007E69CC /* FriendModels.swift */; };
 		086A7B212F472900007E69CC /* FriendsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7B1F2F472900007E69CC /* FriendsService.swift */; };
@@ -46,13 +51,8 @@
 		086A7C1C2F472900007E69CC /* MessagesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C1E2F472900007E69CC /* MessagesListView.swift */; };
 		086A7C1D2F472900007E69CC /* ConversationThreadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C1F2F472900007E69CC /* ConversationThreadView.swift */; };
 		086A7C202F472900007E69CC /* CreateGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A7C212F472900007E69CC /* CreateGroupView.swift */; };
-		080FD1472F47263F0022AA9D /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1462F47263F0022AA9D /* FirebaseAnalytics */; };
-		080FD1492F47263F0022AA9D /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1482F47263F0022AA9D /* FirebaseAnalyticsSwift */; };
-		080FD14B2F47263F0022AA9D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14A2F47263F0022AA9D /* FirebaseAuth */; };
-		080FD14D2F47263F0022AA9D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14C2F47263F0022AA9D /* FirebaseFirestore */; };
-		080FD14F2F47263F0022AA9D /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD14E2F47263F0022AA9D /* FirebaseFirestoreSwift */; };
-		080FD1512F47263F0022AA9D /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 080FD1502F47263F0022AA9D /* FirebaseStorage */; };
-		086A745B2F472889007E69CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 086A745A2F472889007E69CC /* GoogleService-Info.plist */; };
+		087A8AA12F472900007E69EE /* PollActivityDateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */; };
+		087A8AA32F472900007E69EE /* PollCardMediaPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 087A8AA22F472900007E69EE /* PollCardMediaPager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,28 +85,26 @@
 		080FD1362F4723740022AA9D /* LinkUpUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITests.swift; sourceTree = "<group>"; };
 		080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkUpUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		086A745A2F472889007E69CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		086A74712F472900007E69CC /* AuthTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTheme.swift; sourceTree = "<group>"; };
 		086A745E2F472900007E69CC /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		086A745F2F472900007E69CC /* AuthState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthState.swift; sourceTree = "<group>"; };
 		086A74612F472900007E69CC /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
-		086A74652F472900007E69CC /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		086A74632F472900007E69CC /* StartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartView.swift; sourceTree = "<group>"; };
+		086A74652F472900007E69CC /* LogInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogInView.swift; sourceTree = "<group>"; };
 		086A74672F472900007E69CC /* Input.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Input.swift; sourceTree = "<group>"; };
 		086A74692F472900007E69CC /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		086A746B2F472900007E69CC /* GeometryReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryReader.swift; sourceTree = "<group>"; };
 		086A746D2F472900007E69CC /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		086A74712F472900007E69CC /* AuthTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTheme.swift; sourceTree = "<group>"; };
 		086A7A012F472900007E69CC /* Poll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Poll.swift; sourceTree = "<group>"; };
 		086A7A022F472900007E69CC /* PollCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardView.swift; sourceTree = "<group>"; };
-		087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollActivityDateFormatting.swift; sourceTree = "<group>"; };
-		087A8AA22F472900007E69EE /* PollCardMediaPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardMediaPager.swift; sourceTree = "<group>"; };
 		086A7A032F472900007E69CC /* PollsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollsView.swift; sourceTree = "<group>"; };
+		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		086A7A0B2F472900007E69CC /* PollService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollService.swift; sourceTree = "<group>"; };
 		086A7A0C2F472900007E69CC /* CreatePollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePollView.swift; sourceTree = "<group>"; };
 		086A7A0F2F472900007E69CC /* MoreDetailsPopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreDetailsPopupView.swift; sourceTree = "<group>"; };
 		086A7A112F472900007E69CC /* PollHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollHistoryView.swift; sourceTree = "<group>"; };
 		086A7A132F472900007E69CC /* PollResultsChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollResultsChartView.swift; sourceTree = "<group>"; };
 		086A7A152F472900007E69CC /* PollOptionVotersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollOptionVotersView.swift; sourceTree = "<group>"; };
-		086A7A0A2F472900007E69CC /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		086A7B122F472900007E69CC /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		086A7B1E2F472900007E69CC /* FriendModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModels.swift; sourceTree = "<group>"; };
 		086A7B1F2F472900007E69CC /* FriendsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsService.swift; sourceTree = "<group>"; };
@@ -117,6 +115,8 @@
 		086A7C1E2F472900007E69CC /* MessagesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesListView.swift; sourceTree = "<group>"; };
 		086A7C1F2F472900007E69CC /* ConversationThreadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationThreadView.swift; sourceTree = "<group>"; };
 		086A7C212F472900007E69CC /* CreateGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateGroupView.swift; sourceTree = "<group>"; };
+		087A8AA02F472900007E69EE /* PollActivityDateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollActivityDateFormatting.swift; sourceTree = "<group>"; };
+		087A8AA22F472900007E69EE /* PollCardMediaPager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCardMediaPager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,27 +191,44 @@
 			path = LinkUp;
 			sourceTree = "<group>";
 		};
-		086A7B1D2F472900007E69CC /* Friends */ = {
+		080FD1212F4723730022AA9D /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
-				086A7B242F472900007E69CC /* AddFriendsView.swift */,
-				086A7B1E2F472900007E69CC /* FriendModels.swift */,
-				086A7B1F2F472900007E69CC /* FriendsService.swift */,
-				086A7B252F472900007E69CC /* UserRowView.swift */,
+				080FD1222F4723730022AA9D /* Preview Assets.xcassets */,
 			);
-			path = Friends;
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		086A7C172F472900007E69CC /* Messages */ = {
+		080FD12B2F4723730022AA9D /* LinkUpTests */ = {
 			isa = PBXGroup;
 			children = (
-				086A7C1E2F472900007E69CC /* MessagesListView.swift */,
-				086A7C182F472900007E69CC /* ConversationModels.swift */,
-				086A7C192F472900007E69CC /* MessagesService.swift */,
-				086A7C1F2F472900007E69CC /* ConversationThreadView.swift */,
-				086A7C212F472900007E69CC /* CreateGroupView.swift */,
+				080FD12C2F4723730022AA9D /* LinkUpTests.swift */,
 			);
-			path = Messages;
+			path = LinkUpTests;
+			sourceTree = "<group>";
+		};
+		080FD1352F4723740022AA9D /* LinkUpUITests */ = {
+			isa = PBXGroup;
+			children = (
+				080FD1362F4723740022AA9D /* LinkUpUITests.swift */,
+				080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */,
+			);
+			path = LinkUpUITests;
+			sourceTree = "<group>";
+		};
+		086A745B2F472900007E69CC /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				086A74612F472900007E69CC /* AuthViewModel.swift */,
+				086A74712F472900007E69CC /* AuthTheme.swift */,
+				086A745E2F472900007E69CC /* AuthModel.swift */,
+				086A745F2F472900007E69CC /* AuthState.swift */,
+				086A74672F472900007E69CC /* Input.swift */,
+				086A74652F472900007E69CC /* LogInView.swift */,
+				086A7A0A2F472900007E69CC /* SettingsView.swift */,
+				086A74692F472900007E69CC /* SignUpView.swift */,
+			);
+			path = Authentication;
 			sourceTree = "<group>";
 		};
 		086A7A002F472900007E69CC /* Polls */ = {
@@ -240,44 +257,27 @@
 			path = Calendar;
 			sourceTree = "<group>";
 		};
-		086A745B2F472900007E69CC /* Authentication */ = {
+		086A7B1D2F472900007E69CC /* Friends */ = {
 			isa = PBXGroup;
 			children = (
-				086A74612F472900007E69CC /* AuthViewModel.swift */,
-				086A74712F472900007E69CC /* AuthTheme.swift */,
-				086A745E2F472900007E69CC /* AuthModel.swift */,
-				086A745F2F472900007E69CC /* AuthState.swift */,
-				086A74672F472900007E69CC /* Input.swift */,
-				086A74652F472900007E69CC /* LogInView.swift */,
-				086A7A0A2F472900007E69CC /* SettingsView.swift */,
-				086A74692F472900007E69CC /* SignUpView.swift */,
+				086A7B242F472900007E69CC /* AddFriendsView.swift */,
+				086A7B1E2F472900007E69CC /* FriendModels.swift */,
+				086A7B1F2F472900007E69CC /* FriendsService.swift */,
+				086A7B252F472900007E69CC /* UserRowView.swift */,
 			);
-			path = Authentication;
+			path = Friends;
 			sourceTree = "<group>";
 		};
-		080FD1212F4723730022AA9D /* Preview Content */ = {
+		086A7C172F472900007E69CC /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				080FD1222F4723730022AA9D /* Preview Assets.xcassets */,
+				086A7C1E2F472900007E69CC /* MessagesListView.swift */,
+				086A7C182F472900007E69CC /* ConversationModels.swift */,
+				086A7C192F472900007E69CC /* MessagesService.swift */,
+				086A7C1F2F472900007E69CC /* ConversationThreadView.swift */,
+				086A7C212F472900007E69CC /* CreateGroupView.swift */,
 			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		080FD12B2F4723730022AA9D /* LinkUpTests */ = {
-			isa = PBXGroup;
-			children = (
-				080FD12C2F4723730022AA9D /* LinkUpTests.swift */,
-			);
-			path = LinkUpTests;
-			sourceTree = "<group>";
-		};
-		080FD1352F4723740022AA9D /* LinkUpUITests */ = {
-			isa = PBXGroup;
-			children = (
-				080FD1362F4723740022AA9D /* LinkUpUITests.swift */,
-				080FD1382F4723740022AA9D /* LinkUpUITestsLaunchTests.swift */,
-			);
-			path = LinkUpUITests;
+			path = Messages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -610,12 +610,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = LinkUp/LinkUp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LinkUp/Preview Content\"";
-				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				DEVELOPMENT_TEAM = U2W8583R67;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -648,12 +650,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = LinkUp/LinkUp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LinkUp/Preview Content\"";
-				DEVELOPMENT_TEAM = 5A6U5J7KQK;
+				DEVELOPMENT_TEAM = U2W8583R67;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
