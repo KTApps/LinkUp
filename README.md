@@ -38,4 +38,4 @@ Dependencies are managed with **Swift Package Manager**. Xcode will resolve pack
 
 ---
 
-**Last Updated:** February 2026
+**Last Updated:** May 2026
