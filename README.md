@@ -1,49 +1,40 @@
 # LinkUp
 
-iOS app — processes and setup documentation.
+iOS social scheduling app (SwiftUI + Firebase).
+
+LinkUp helps friend groups organise meet-ups without long, confusing chat threads. It combines group messaging with polls, then adds a separate confirmation step so the group can clearly close on one final plan. Confirmed plans are surfaced in a calendar-style view so they stay easy to find later.
 
 ---
 
 ## Purpose
 
-This repo includes **repeatable processes and setup guides** for development tasks and tooling.
+This repository contains:
+
+- the **LinkUp iOS app** source code
 
 ---
 
-## Setup Guides
+## Quick start (build and run)
 
-### [Firebase CLI & MCP](.cursor/docs/firebase-setup.md)
-Guide for setting up Firebase CLI and MCP integration with Cursor.
+### Requirements
 
-- Installing Firebase CLI and authenticating
-- Configuring MCP in Cursor
-- Enabling AI agents to interact with Firebase
+- **macOS** with **Xcode 15.4**
+- An iOS Simulator installed (for example iPhone 15)
+- Internet access (Firebase backend)
 
-**Slash command:** `/setup-firebase`
+### Steps
 
-### [XcodeBuildMCP](.cursor/docs/xcodebuild-mcp-setup.md)
-Guide for setting up XcodeBuildMCP (Xcode, simulators, iOS builds via AI in Cursor).
+1. Open `LinkUp.xcodeproj` in Xcode.
+2. Select an iOS Simulator device.
+3. Build and run.
 
-- Node.js and Xcode developer path
-- XcodeBuildMCP in Cursor
-- Building, running, testing iOS apps and UI automation
-
-**Slash command:** `/setup-xcodebuild-mcp`
+Dependencies are managed with **Swift Package Manager**. Xcode will resolve packages automatically on first build.
 
 ---
 
-## How to Use
+## How to use this repo
 
-- **Read the docs:** Open the guides in `.cursor/docs/` and follow the steps.
-- **Slash commands:** In Cursor chat, use `/setup-firebase` or `/setup-xcodebuild-mcp` for interactive setup.
-
----
-
-## Adding New Processes
-
-1. Add documentation (e.g. in `.cursor/docs/`).
-2. Add a slash command in `.cursor/commands/` if you want interactive setup.
-3. Update this README with a link to the new guide.
+- **Build/run the app**: follow “Quick start (build and run)” above.
 
 ---
 

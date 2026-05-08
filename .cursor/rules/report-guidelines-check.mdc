@@ -1,0 +1,18 @@
+---
+description: Check report guidelines before writing background markdown
+globs: background/**/*.md
+alwaysApply: false
+---
+
+# Report writing: mandatory guideline check
+
+When drafting, rewriting, or polishing any report/dissertation text in `background/**/*.md`, the assistant must first consult `background/project-report-guidelines.md` and follow it.
+
+In particular, the assistant must ensure that:
+
+- each section and subsection begins with a short overview of what follows;
+- headings and numbering are consistent and correctly formatted;
+- British English is used, with complete sentences and paragraph structure;
+- contractions, colloquialisms, and slang are avoided;
+- typography and conventions (lists, hyphenation, capitalisation, terms, abbreviations, symbols) are consistent.
+

@@ -1,0 +1,15 @@
+---
+description: Use background/background.md as report context
+globs:
+  - "background/**/*.md"
+  - "**/*.md"
+alwaysApply: true
+---
+
+# Report context: background section
+
+When the user asks for help writing, editing, expanding, or checking their report/dissertation text, treat `background/background.md` as the **source of truth** for the project background:
+
+- Prefer consistent terminology, claims, and framing with `background/background.md`
+- When suggesting additions elsewhere in the report, ensure they do not contradict the background
+- If the user asks something that depends on the background (e.g. “what’s the gap?”, “what does the project solve?”), consult `background/background.md` first

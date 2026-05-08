@@ -21,6 +21,61 @@ private enum UserProfileSyncResult {
     case fetchFailed(Error)
 }
 
+// MARK: - Sign up validation (shared with SignUpView for inline hints)
+
+extension AuthState {
+
+    /// Firebase Auth default minimum password length unless changed in console.
+    static let signUpMinimumPasswordLength = 6
+
+    /// Returns a user-facing hint if the email fails the simple Stage 2 rule, otherwise `nil`.
+    static func signUpEmailValidationMessage(_ email: String) -> String? {
+        let trimmed = email.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty {
+            return "Enter your email address."
+        }
+        guard let at = trimmed.firstIndex(of: "@") else {
+            return "Email must include @ and a domain."
+        }
+        let local = trimmed[..<at]
+        let afterAt = trimmed[trimmed.index(after: at)...]
+        guard !local.isEmpty, !afterAt.isEmpty else {
+            return "Enter a valid email address (include @ and a domain)."
+        }
+        return nil
+    }
+
+    /// Returns a user-facing hint if the password is too short for Firebase Auth, otherwise `nil`.
+    static func signUpPasswordValidationMessage(_ password: String) -> String? {
+        if password.count < signUpMinimumPasswordLength {
+            return "Password must be at least \(signUpMinimumPasswordLength) characters."
+        }
+        return nil
+    }
+
+    fileprivate static func mapSignUpError(_ error: Error) -> String {
+        let ns = error as NSError
+        if ns.domain == NSURLErrorDomain {
+            return "Network error. Check your connection and try again."
+        }
+        let code = AuthErrorCode(_nsError: ns)
+        switch code.code {
+        case .emailAlreadyInUse:
+            return "That email is already registered. Log in or use a different email."
+        case .invalidEmail:
+            return "That email address doesn't look valid. Check it and try again."
+        case .weakPassword:
+            return "Password is too weak. Use at least \(signUpMinimumPasswordLength) characters."
+        case .networkError:
+            return "Network error. Check your connection and try again."
+        case .internalError:
+            return "Something went wrong. Try again."
+        default:
+            return "Something went wrong. Try again."
+        }
+    }
+}
+
 // MARK: - Sign up, log in, listen for user
 
 extension AuthState {
@@ -29,14 +84,13 @@ extension AuthState {
     /// (allowed when not signed in), creates Firebase Auth user, writes profile to `users/<uid>`
     /// and claim to `usernames/<lowercase-username>`, then loads current user.
     func signUp(withEmail email: String, password: String, username: String) async {
-        signUpError = false
+        signUpErrorMessage = nil
         usernameExists = false
 
         let normalizedUsername = username.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !normalizedUsername.isEmpty else {
-            signUpError = true
-            return
-        }
+        guard !normalizedUsername.isEmpty else { return }
+
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines)
 
         do {
             // Check username availability (usernames collection is readable without auth).
@@ -46,10 +100,10 @@ extension AuthState {
                 return
             }
 
-            let result = try await authRef.createUser(withEmail: email, password: password)
+            let result = try await authRef.createUser(withEmail: trimmedEmail, password: password)
             userSession = result.user
 
-            let user = AuthModel(id: result.user.uid, username: username, email: email, profileImageURL: nil)
+            let user = AuthModel(id: result.user.uid, username: username, email: trimmedEmail, profileImageURL: nil)
             let encodedUser = try Firestore.Encoder().encode(user)
             let userRef = databaseRef.collection("users").document(user.id)
             try await userRef.setData(["AuthenticationData": encodedUser])
@@ -58,7 +112,7 @@ extension AuthState {
 
             await listenForUser()
         } catch {
-            signUpError = true
+            signUpErrorMessage = Self.mapSignUpError(error)
         }
     }
 

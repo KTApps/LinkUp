@@ -1,0 +1,23 @@
+---
+description: Avoid meta-commentary; lead with substance in prose and explanations
+alwaysApply: true
+---
+
+# No meta-commentary
+
+Do **not** add **meta-commentary**: sentences that describe what the text, section, figures, or assistant is *doing* instead of delivering the actual content.
+
+## Treat as meta-commentary (avoid)
+
+- Explaining **why** a section exists, what it will cover, or how the reader should read it (e.g. “This section discusses…”, “The figures are not there to…”, “Below we will…”, “It is important to note that…”).
+- Announcing **what figures or sections are “for”** (e.g. “the figures are not there to restate every cell; they encode…”) instead of stating findings. **Referring to a figure in support of a claim** (e.g. “Figure 2 is consistent with…”) is fine when it adds substance, not only restatement of the axes.
+- Framing the assistant’s process (“I will now…”, “Let me explain…”, “First, … second, …” as throat-clearing) in user-facing deliverables unless the user asked for a tutorial or step list.
+
+## Do instead
+
+- **Start with the claim, result, or instruction** the reader needs.
+- For reports: tie evidence to **interpretation**, **limits**, or **next steps**; skip signposting that repeats the heading.
+
+## Exception
+
+If the user **explicitly** asks for signposting, a “how to read this chapter” note, or methodological framing, provide only what they asked for and keep it **brief**.

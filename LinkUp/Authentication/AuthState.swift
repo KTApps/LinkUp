@@ -29,7 +29,8 @@ class AuthState: ObservableObject {
     // MARK: - Error flags (for UI alerts)
 
     @Published var logInError: Bool = false
-    @Published var signUpError: Bool = false
+    /// Set when sign-up fails after client-side checks (Firebase or Firestore). Cleared on success or dismiss.
+    @Published var signUpErrorMessage: String?
     @Published var usernameExists: Bool = false
 
     init() {}

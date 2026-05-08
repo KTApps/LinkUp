@@ -15,6 +15,9 @@ struct SignUpView: View {
     @State private var username = ""
     @State private var email = ""
     @State private var password = ""
+    @State private var usernameHelp: String?
+    @State private var emailHelp: String?
+    @State private var passwordHelp: String?
 
     var body: some View {
         GeometryReader { geometry in
@@ -33,21 +36,35 @@ struct SignUpView: View {
 
                         VStack(spacing: geometry.size.height * 0.02) {
                             Input(text: $username, title: "Username", placeholder: "Choose a username")
+                            if let usernameHelp {
+                                Text(usernameHelp)
+                                    .font(.caption)
+                                    .foregroundStyle(AuthTheme.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
                             Input(text: $email, title: "Email", placeholder: "name@example.com")
+                            if let emailHelp {
+                                Text(emailHelp)
+                                    .font(.caption)
+                                    .foregroundStyle(AuthTheme.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
                             Input(
                                 text: $password,
                                 title: "Password",
                                 placeholder: "******",
                                 secureField: true
                             )
+                            if let passwordHelp {
+                                Text(passwordHelp)
+                                    .font(.caption)
+                                    .foregroundStyle(AuthTheme.secondary)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
 
                             Button {
                                 Task {
-                                    await authState.signUp(
-                                        withEmail: email,
-                                        password: password,
-                                        username: username
-                                    )
+                                    await submitSignUp()
                                 }
                             } label: {
                                 Text("SIGN UP")
@@ -83,12 +100,15 @@ struct SignUpView: View {
             .background(AuthTheme.background)
             .keyboardResponsive()
         }
-        .alert("Sign up failed", isPresented: $authState.signUpError) {
+        .alert("Sign up failed", isPresented: Binding(
+            get: { authState.signUpErrorMessage != nil },
+            set: { if !$0 { authState.signUpErrorMessage = nil } }
+        )) {
             Button("Try again") {
-                authState.signUpError = false
+                authState.signUpErrorMessage = nil
             }
         } message: {
-            Text("Email already in use. Try another or log in.")
+            Text(authState.signUpErrorMessage ?? "")
         }
         .alert("Username is taken", isPresented: $authState.usernameExists) {
             Button("Try again") {
@@ -97,6 +117,29 @@ struct SignUpView: View {
         } message: {
             Text("Choose a different username.")
         }
+    }
+
+    private func submitSignUp() async {
+        usernameHelp = nil
+        emailHelp = nil
+        passwordHelp = nil
+        authState.signUpErrorMessage = nil
+
+        let trimmedUser = username.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmedUser.isEmpty {
+            usernameHelp = "Enter a username."
+            return
+        }
+        if let msg = AuthState.signUpEmailValidationMessage(email) {
+            emailHelp = msg
+            return
+        }
+        if let msg = AuthState.signUpPasswordValidationMessage(password) {
+            passwordHelp = msg
+            return
+        }
+
+        await authState.signUp(withEmail: email, password: password, username: username)
     }
 }
 

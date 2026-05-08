@@ -13,6 +13,8 @@ struct ConversationThreadView: View {
     let displayTitle: String
     @State private var messages: [Message] = []
     @State private var inputText = ""
+    /// Local bubble shown until Firestore listener reflects the send (same text + self clears pending).
+    @State private var pendingSend: Message?
     @State private var listener: ListenerRegistration?
     @State private var errorMessage: String?
 
@@ -51,23 +53,42 @@ struct ConversationThreadView: View {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 8) {
                     ForEach(messages) { msg in
-                        messageRow(msg)
+                        messageRow(msg, isPending: false)
+                    }
+                    if let pending = pendingSend {
+                        messageRow(pending, isPending: true)
                     }
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
             }
             .onChange(of: messages.count) { _, _ in
-                if let last = messages.last?.id {
-                    withAnimation(.easeOut(duration: 0.2)) {
-                        proxy.scrollTo(last, anchor: .bottom)
-                    }
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: messages.last?.id) { _, _ in
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: pendingSend?.id) { _, _ in
+                scrollToBottom(proxy: proxy)
+            }
+            .onChange(of: messages) { _, newList in
+                guard let pending = pendingSend else { return }
+                if newList.contains(where: { $0.isFromMe(myUid: myUid) && $0.text == pending.text }) {
+                    pendingSend = nil
                 }
             }
         }
     }
 
-    private func messageRow(_ msg: Message) -> some View {
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        let targetId = pendingSend?.id ?? messages.last?.id
+        guard let targetId else { return }
+        withAnimation(.easeOut(duration: 0.2)) {
+            proxy.scrollTo(targetId, anchor: .bottom)
+        }
+    }
+
+    private func messageRow(_ msg: Message, isPending: Bool) -> some View {
         let isMe = msg.isFromMe(myUid: myUid)
         return HStack {
             if isMe { Spacer(minLength: 60) }
@@ -79,7 +100,8 @@ struct ConversationThreadView: View {
                     .padding(.vertical, 8)
                     .background(isMe ? AuthTheme.accent : AuthTheme.primary.opacity(0.15))
                     .clipShape(RoundedRectangle(cornerRadius: 12))
-                Text(formatTime(msg.createdAt))
+                    .opacity(isPending ? 0.88 : 1)
+                Text(isPending ? "Sending…" : formatTime(msg.createdAt))
                     .font(.caption2)
                     .foregroundStyle(AuthTheme.secondary)
             }
@@ -126,12 +148,22 @@ struct ConversationThreadView: View {
     private func sendMessage() {
         let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty, let conversationId = conversation.id else { return }
+        let pending = Message(
+            id: "pending-\(UUID().uuidString)",
+            senderUid: myUid,
+            senderUsername: myUsername,
+            text: text,
+            createdAt: Timestamp(date: Date())
+        )
+        pendingSend = pending
         inputText = ""
         Task {
             do {
                 try await authState.sendMessage(conversationId: conversationId, senderUid: myUid, senderUsername: myUsername, text: text)
             } catch {
                 errorMessage = error.localizedDescription
+                pendingSend = nil
+                inputText = text
             }
         }
     }
