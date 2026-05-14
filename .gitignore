@@ -1,6 +1,3 @@
-# Cursor / local debug logs (folder kept via .gitkeep)
-.cursor/debug-logs/*.log
-
 # macOS
 .DS_Store
 
